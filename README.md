@@ -30,12 +30,13 @@ If your remote repository is empty, push the latest dashboard commit:
 
 1. Clone or download the repository.
 2. Open `index.html` in a modern browser with internet access so the Chart.js CDN can load.
+3. Use the **Month** dropdown in the header to switch between May–August 2024 views of the dashboard.
 
 No build step is required—the dashboard is a static page.
 
 ## Data Highlights
 
-- Placement pipeline metrics (applications, viewings, placements, no-shows) for each day in August 2024.
+- Placement pipeline metrics (applications, viewings, placements, no-shows) for each day in May through August 2024.
 - Portfolio supply KPIs (vacancy, incoming units, conversion rates).
 - Tenant performance trends for rent collection, default rates, and payment punctuality.
 - Summary insights to guide leasing operations.

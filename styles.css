@@ -43,6 +43,51 @@ body {
   gap: 1rem;
 }
 
+.header__right {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.month-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: 0.9rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  min-width: 160px;
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 208, 0.08);
+}
+
+.month-selector__label {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.month-selector__input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  outline: none;
+  appearance: none;
+  padding: 0;
+  margin: 0;
+}
+
+.month-selector__input option {
+  color: #0f172a;
+}
+
 .page__header h1 {
   margin: 0;
   font-size: 2rem;
@@ -219,5 +264,15 @@ canvas {
   .page__header {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .header__right {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .month-selector {
+    width: 100%;
   }
 }
