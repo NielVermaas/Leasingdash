@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Residential Leasing Performance Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <script src="dashboard.js" defer></script>
+</head>
+<body>
+  <div class="page">
+    <header class="page__header">
+      <div>
+        <h1>Residential Portfolio Dashboard</h1>
+        <p class="page__subtitle">August 2024 &bull; Portfolio Size: 120 units</p>
+      </div>
+      <div class="header__filters">
+        <div class="filter">Property: All</div>
+        <div class="filter">Bedroom Mix: 1-3 BR</div>
+        <div class="filter">Agent: Leasing Team</div>
+      </div>
+    </header>
+
+    <section class="kpi-strip">
+      <article class="kpi-card">
+        <h2>Lead ➜ Placement Funnel</h2>
+        <div class="kpi-card__value">Applications 174 → Viewings 137 → Placements 47</div>
+        <p class="kpi-card__meta">Lead to Viewing: 78.7% &nbsp;|&nbsp; Viewing to Placement: 34.3% &nbsp;|&nbsp; Lead to Placement: 27.0%</p>
+      </article>
+      <article class="kpi-card">
+        <h2>Vacancy Snapshot</h2>
+        <div class="kpi-card__value">11.7%</div>
+        <p class="kpi-card__meta">14 units available by August 5th</p>
+      </article>
+      <article class="kpi-card">
+        <h2>Incoming Supply</h2>
+        <div class="kpi-card__value">7.5%</div>
+        <p class="kpi-card__meta">9 new units becoming available in August</p>
+      </article>
+      <article class="kpi-card">
+        <h2>Payment Discipline</h2>
+        <div class="kpi-card__value">Avg. 2.4 days late</div>
+        <p class="kpi-card__meta">Average lease duration: 23.5 months</p>
+      </article>
+    </section>
+
+    <main class="layout">
+      <section class="panel">
+        <h2>Placement Performance</h2>
+        <div class="panel__grid">
+          <div class="panel__item">
+            <header class="panel__item-header">
+              <h3>Daily Lead Pipeline</h3>
+              <p>Applications vs. Viewings vs. Placements</p>
+            </header>
+            <canvas id="dailyPipelineChart" height="280"></canvas>
+          </div>
+          <div class="panel__item">
+            <header class="panel__item-header">
+              <h3>Attendance Breakdown</h3>
+              <p>Viewings vs. No-Shows vs. Placements</p>
+            </header>
+            <canvas id="attendanceChart" height="280"></canvas>
+          </div>
+          <div class="panel__item panel__item--wide">
+            <header class="panel__item-header">
+              <h3>Monthly Totals &amp; Conversion</h3>
+            </header>
+            <div class="totals">
+              <div class="total">
+                <span class="total__label">Applications</span>
+                <span class="total__value">174</span>
+              </div>
+              <div class="total">
+                <span class="total__label">Viewings</span>
+                <span class="total__value">137</span>
+              </div>
+              <div class="total">
+                <span class="total__label">Placements</span>
+                <span class="total__value">47</span>
+              </div>
+              <div class="total">
+                <span class="total__label">No-Show Rate</span>
+                <span class="total__value">20.3%</span>
+              </div>
+              <div class="total">
+                <span class="total__label">Lead ➜ Placement</span>
+                <span class="total__value">27.0%</span>
+              </div>
+              <div class="total">
+                <span class="total__label">Viewing ➜ Placement</span>
+                <span class="total__value">34.3%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Tenant Performance</h2>
+        <div class="panel__grid">
+          <div class="panel__item">
+            <header class="panel__item-header">
+              <h3>Rent Collection Progress</h3>
+              <p>Expected vs. Actual by the 5th</p>
+            </header>
+            <canvas id="rentCollectionChart" height="280"></canvas>
+          </div>
+          <div class="panel__item">
+            <header class="panel__item-header">
+              <h3>Default Rate by Month</h3>
+              <p>Units paid vs. unpaid by the 5th</p>
+            </header>
+            <canvas id="defaultRateChart" height="280"></canvas>
+          </div>
+          <div class="panel__item panel__item--wide">
+            <header class="panel__item-header">
+              <h3>Payment Punctuality</h3>
+              <p>Share of monthly rent received each day (Sept 2024)</p>
+            </header>
+            <canvas id="paymentPunctualityChart" height="220"></canvas>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="insights">
+      <article class="insight">
+        <h3>Highlights</h3>
+        <ul>
+          <li>August 7th produced the highest lead volume (8 applications) with 2 placements.</li>
+          <li>Attendance dips on weekends drive a 20.3% no-show rate.</li>
+          <li>July rent run lagging at 96.7% collection prompts follow-up calls.</li>
+        </ul>
+      </article>
+      <article class="insight">
+        <h3>Focus Areas</h3>
+        <ul>
+          <li>Prioritize turn on 14 vacant units to cut vacancy by 2 pts.</li>
+          <li>Leverage autopay campaign to reduce average late days below 2.</li>
+          <li>Monitor 9 incoming units for pre-leasing opportunities.</li>
+        </ul>
+      </article>
+    </footer>
+  </div>
+</body>
+</html>
