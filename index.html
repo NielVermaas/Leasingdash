@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Residential Leasing Performance Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <script src="dashboard.js" defer></script>
+</head>
+<body>
+  <div class="page">
+    <header class="page__header">
+      <div>
+        <h1 id="dashboardTitle">Residential Portfolio Dashboard</h1>
+        <p class="page__subtitle" id="portfolioSubtitle"></p>
+      </div>
+      <div class="header__controls">
+        <div class="header__filters">
+          <div class="filter" id="filterProperty"></div>
+          <div class="filter" id="filterBedroom"></div>
+          <div class="filter" id="filterAgent"></div>
+        </div>
+        <label class="scenario-select">
+          <span>Scenario</span>
+          <select id="scenarioSelect" aria-label="Select dashboard scenario"></select>
+        </label>
+      </div>
+    </header>
+
+    <section class="kpi-strip">
+      <article class="kpi-card">
+        <h2>Lead ➜ Placement Funnel</h2>
+        <div class="kpi-card__value" id="funnelHeadline"></div>
+        <p class="kpi-card__meta" id="funnelMeta"></p>
+      </article>
+      <article class="kpi-card">
+        <h2>Vacancy Snapshot</h2>
+        <div class="kpi-card__value" id="vacancyRate"></div>
+        <p class="kpi-card__meta" id="vacancyDetail"></p>
+      </article>
+      <article class="kpi-card">
+        <h2>Incoming Supply</h2>
+        <div class="kpi-card__value" id="incomingSupply"></div>
+        <p class="kpi-card__meta" id="incomingDetail"></p>
+      </article>
+      <article class="kpi-card">
+        <h2>Payment Discipline</h2>
+        <div class="kpi-card__value" id="paymentDiscipline"></div>
+        <p class="kpi-card__meta" id="leaseDuration"></p>
+      </article>
+    </section>
+
+    <main class="layout">
+      <section class="panel">
+        <h2>Placement Performance</h2>
+        <div class="panel__grid">
+          <div class="panel__item">
+            <header class="panel__item-header">
+              <h3>Daily Lead Pipeline</h3>
+              <p>Applications vs. Viewings vs. Placements</p>
+            </header>
+            <canvas id="dailyPipelineChart" height="280"></canvas>
+          </div>
+          <div class="panel__item">
+            <header class="panel__item-header">
+              <h3>Attendance Breakdown</h3>
+              <p>Viewings vs. No-Shows vs. Placements</p>
+            </header>
+            <canvas id="attendanceChart" height="280"></canvas>
+          </div>
+          <div class="panel__item panel__item--wide">
+            <header class="panel__item-header">
+              <h3>Monthly Totals &amp; Conversion</h3>
+            </header>
+            <div class="totals">
+              <div class="total">
+                <span class="total__label">Applications</span>
+                <span class="total__value" id="totalApplications"></span>
+              </div>
+              <div class="total">
+                <span class="total__label">Viewings</span>
+                <span class="total__value" id="totalViewings"></span>
+              </div>
+              <div class="total">
+                <span class="total__label">Placements</span>
+                <span class="total__value" id="totalPlacements"></span>
+              </div>
+              <div class="total">
+                <span class="total__label">No-Show Rate</span>
+                <span class="total__value" id="totalNoShowRate"></span>
+              </div>
+              <div class="total">
+                <span class="total__label">Lead ➜ Placement</span>
+                <span class="total__value" id="leadToPlacement"></span>
+              </div>
+              <div class="total">
+                <span class="total__label">Viewing ➜ Placement</span>
+                <span class="total__value" id="viewingToPlacement"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Tenant Performance</h2>
+        <div class="panel__grid">
+          <div class="panel__item">
+            <header class="panel__item-header">
+              <h3>Rent Collection Progress</h3>
+              <p>Expected vs. Actual by the 5th</p>
+            </header>
+            <canvas id="rentCollectionChart" height="280"></canvas>
+          </div>
+          <div class="panel__item">
+            <header class="panel__item-header">
+              <h3>Default Rate by Month</h3>
+              <p>Units paid vs. unpaid by the 5th</p>
+            </header>
+            <canvas id="defaultRateChart" height="280"></canvas>
+          </div>
+          <div class="panel__item panel__item--wide">
+            <header class="panel__item-header">
+              <h3>Payment Punctuality</h3>
+              <p id="paymentPunctualityCaption"></p>
+            </header>
+            <canvas id="paymentPunctualityChart" height="220"></canvas>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="insights">
+      <article class="insight">
+        <h3>Highlights</h3>
+        <ul id="insightHighlights"></ul>
+      </article>
+      <article class="insight">
+        <h3>Focus Areas</h3>
+        <ul id="insightFocus"></ul>
+      </article>
+    </footer>
+  </div>
+</body>
+</html>
