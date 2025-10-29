@@ -40,6 +40,11 @@ If your remote repository is empty, push the latest dashboard commit:
 
 No build step is required—the dashboard is a static page.
 
+## Printing
+
+- Use your browser's print dialog (or save as PDF) when you need a hard copy. The dashboard automatically shifts to a clean light
+  palette, hides interactive-only controls, and refreshes chart colors for legibility without altering the on-screen appearance.
+
 ## Data Highlights
 
 - Placement pipeline metrics (applications, viewings, placements, no-shows) for each day in the selected timeframe.

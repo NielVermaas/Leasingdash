@@ -200,6 +200,8 @@ document.addEventListener('DOMContentLoaded', () => {
       applyScenario(scenario);
     });
   }
+
+  setupPrintMode(state);
 });
 
 function initializeTheme(state) {
@@ -226,6 +228,75 @@ function initializeTheme(state) {
     updateThemeToggleUi(toggle, nextIsLight);
     updateChartsTheme(state.charts);
   });
+}
+
+function setupPrintMode(state) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const toggle = document.getElementById('themeToggle');
+  let originalTheme = null;
+
+  const applyPrintPalette = () => {
+    if (originalTheme !== null) {
+      return;
+    }
+    originalTheme = document.body.classList.contains('theme-light') ? 'light' : 'dark';
+    document.body.classList.add('print-mode');
+    if (originalTheme === 'dark') {
+      document.body.classList.add('theme-light');
+    }
+    currentThemeTokens = captureThemeTokens();
+    applyChartDefaults(currentThemeTokens);
+    updateChartsTheme(state.charts);
+    if (toggle) {
+      const isLight = document.body.classList.contains('theme-light');
+      updateThemeToggleUi(toggle, isLight);
+    }
+  };
+
+  const restorePalette = () => {
+    if (originalTheme === null) {
+      return;
+    }
+    if (originalTheme === 'dark') {
+      document.body.classList.remove('theme-light');
+    }
+    document.body.classList.remove('print-mode');
+    currentThemeTokens = captureThemeTokens();
+    applyChartDefaults(currentThemeTokens);
+    updateChartsTheme(state.charts);
+    if (toggle) {
+      const isLight = document.body.classList.contains('theme-light');
+      updateThemeToggleUi(toggle, isLight);
+    }
+    originalTheme = null;
+  };
+
+  window.addEventListener('beforeprint', applyPrintPalette);
+  window.addEventListener('afterprint', restorePalette);
+
+  if (typeof window.matchMedia === 'function') {
+    const mediaQueryList = window.matchMedia('print');
+    if (typeof mediaQueryList.addEventListener === 'function') {
+      mediaQueryList.addEventListener('change', (event) => {
+        if (event.matches) {
+          applyPrintPalette();
+        } else {
+          restorePalette();
+        }
+      });
+    } else if (typeof mediaQueryList.addListener === 'function') {
+      mediaQueryList.addListener((event) => {
+        if (event.matches) {
+          applyPrintPalette();
+        } else {
+          restorePalette();
+        }
+      });
+    }
+  }
 }
 
 function getStoredTheme() {

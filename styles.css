@@ -57,6 +57,28 @@ body {
   transition: background 0.4s ease, color 0.3s ease;
 }
 
+body.print-mode {
+  --bg: #ffffff;
+  --bg-gradient-1: transparent;
+  --bg-gradient-2: transparent;
+  --surface: #ffffff;
+  --surface-alt: #ffffff;
+  --surface-contrast: #ffffff;
+  --text-primary: #0f172a;
+  --text-muted: #475569;
+  --border: rgba(148, 163, 208, 0.4);
+  --card-shadow: none;
+  --panel-shadow: none;
+  --panel-item-bg: #ffffff;
+  --chart-text: #1e293b;
+  --chart-grid: rgba(148, 163, 208, 0.35);
+  --tooltip-bg: rgba(15, 23, 42, 0.85);
+  --tooltip-border: rgba(148, 163, 208, 0.4);
+  --axis-title: #1e293b;
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -327,6 +349,39 @@ canvas {
   width: 100% !important;
 }
 
+body.print-mode .page,
+body.print-mode .kpi-card,
+body.print-mode .panel,
+body.print-mode .panel__item,
+body.print-mode .insight {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: none !important;
+}
+
+body.print-mode .page__subtitle,
+body.print-mode .kpi-card h2,
+body.print-mode .kpi-card__meta,
+body.print-mode .panel__item-header p,
+body.print-mode .insight ul {
+  color: #475569 !important;
+}
+
+body.print-mode .select-control select {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: rgba(148, 163, 208, 0.6) !important;
+  box-shadow: none !important;
+}
+
+body.print-mode .select-control span {
+  color: #475569 !important;
+}
+
+body.print-mode .theme-toggle {
+  display: none !important;
+}
+
 @media (max-width: 768px) {
   .page {
     padding: 2rem 1.3rem 3rem;
@@ -345,5 +400,53 @@ canvas {
 @media (max-width: 900px) {
   .panel__grid--split {
     grid-template-columns: 1fr;
+  }
+}
+
+@page {
+  margin: 1.25cm;
+}
+
+@media print {
+  body {
+    background: #ffffff !important;
+  }
+
+  .page {
+    max-width: none;
+    margin: 0;
+    padding: 1.2rem 0;
+  }
+
+  .page__header {
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .header__controls {
+    justify-content: flex-start;
+    gap: 0.6rem;
+  }
+
+  .theme-toggle {
+    display: none !important;
+  }
+
+  .kpi-strip,
+  .panel__grid,
+  .insights {
+    gap: 1rem;
+  }
+
+  .panel,
+  .panel__item,
+  .kpi-card,
+  .insight {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  canvas {
+    background: #ffffff !important;
   }
 }
