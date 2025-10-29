@@ -15,6 +15,15 @@ const basePipeline = {
 
 const monthDayLabels = Array.from({ length: 31 }, (_, idx) => (idx + 1).toString());
 
+const typicalPunctualityDistribution = [
+  28, 20, 10, 6, 5,
+  2, 2, 2, 2, 2,
+  1.5, 1.5, 1.5, 1.5, 1.5,
+  1, 1, 1, 1, 1,
+  0.8, 0.8, 0.8, 0.8, 0.8,
+  0.9, 0.9, 0.9, 0.9, 0.9, 0.9
+];
+
 const THEME_STORAGE_KEY = 'leasingdash-theme';
 let currentThemeTokens = null;
 
@@ -165,10 +174,7 @@ function buildScenarios() {
       paymentPunctuality: {
         label: 'September 2024 rent run',
         days: [...monthDayLabels],
-        values: [
-          32, 18, 11, 6, 5, 4, 3, 2, 1.5, 1.5, 1.3, 1.1, 0.9, 0.8, 0.9, 0.8,
-          0.6, 0.6, 0.5, 0.5, 0.6, 0.6, 0.5, 0.5, 0.8, 1.2, 1.0, 0.8, 0.6, 0.5, 0.9
-        ],
+        values: [...typicalPunctualityDistribution],
         dueWindowDays: 5
       },
       supply: {
@@ -228,10 +234,7 @@ function buildScenarios() {
       paymentPunctuality: {
         label: 'July 2024 rent run',
         days: [...monthDayLabels],
-        values: [
-          28, 16, 11, 6, 4, 4.2, 3.2, 2.2, 2.0, 1.4, 1.6, 1.5, 1.4, 1.3, 1.2, 1.3,
-          1.1, 0.9, 0.9, 0.8, 0.9, 0.8, 0.8, 0.7, 0.8, 1.4, 1.2, 1.0, 0.8, 0.8, 0.8
-        ],
+        values: [...typicalPunctualityDistribution],
         dueWindowDays: 5
       },
       supply: {
@@ -291,10 +294,7 @@ function buildScenarios() {
       paymentPunctuality: {
         label: 'Projected October 2024 rent run',
         days: [...monthDayLabels],
-        values: [
-          31.5, 19.5, 11.2, 6.5, 5.0, 3.8, 3.1, 2.2, 1.6, 1.4, 1.2, 1.0, 0.9, 0.8, 0.8, 0.7,
-          0.6, 0.6, 0.5, 0.5, 0.6, 0.6, 0.6, 0.6, 0.7, 0.9, 0.8, 0.7, 0.4, 0.5, 0.2
-        ],
+        values: [...typicalPunctualityDistribution],
         dueWindowDays: 5
       },
       supply: {
@@ -354,10 +354,7 @@ function buildScenarios() {
       paymentPunctuality: {
         label: 'August 2024 rent run',
         days: [...monthDayLabels],
-        values: [
-          25, 15, 10, 5, 5, 4.5, 3.5, 2.5, 2.0, 1.5, 1.8, 1.6, 1.5, 1.5, 1.6, 1.4,
-          1.2, 1.1, 1.1, 1.2, 1.1, 1.0, 0.9, 0.9, 1.1, 1.4, 1.3, 1.1, 1.0, 1.0, 1.2
-        ],
+        values: [...typicalPunctualityDistribution],
         dueWindowDays: 5
       },
       supply: {
