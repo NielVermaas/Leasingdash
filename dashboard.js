@@ -1,3 +1,10 @@
+const FALLBACK_COLORS = {
+  accent1: 'rgba(66, 212, 142, 0.85)',
+  accent2: 'rgba(12, 59, 46, 0.85)',
+  accent3: 'rgba(214, 255, 92, 0.85)',
+  accent4: 'rgba(202, 166, 255, 0.85)'
+};
+
 const basePipeline = {
   applications: [
     5, 6, 4, 7, 5, 6, 8, 5, 4, 7, 6, 5, 6, 7, 4, 5, 6, 7, 5, 6, 4, 5, 6, 7, 5, 6, 4, 5, 7, 6, 5
@@ -323,12 +330,20 @@ function captureThemeTokens() {
     tooltipBg: styles.getPropertyValue('--tooltip-bg').trim(),
     tooltipBorder: styles.getPropertyValue('--tooltip-border').trim(),
     axisTitle: styles.getPropertyValue('--axis-title').trim(),
-    textMuted: styles.getPropertyValue('--text-muted').trim()
+    textMuted: styles.getPropertyValue('--text-muted').trim(),
+    chartAccent1: styles.getPropertyValue('--chart-accent-1').trim(),
+    chartAccent2: styles.getPropertyValue('--chart-accent-2').trim(),
+    chartAccent3: styles.getPropertyValue('--chart-accent-3').trim(),
+    chartAccent4: styles.getPropertyValue('--chart-accent-4').trim()
   };
 }
 
 function getThemeToken(key) {
   return currentThemeTokens ? currentThemeTokens[key] : undefined;
+}
+
+function getAccentColor(index, fallback) {
+  return getThemeToken(`chartAccent${index}`) || fallback;
 }
 
 function updateThemeToggleUi(button, isLight) {
@@ -820,21 +835,21 @@ function createDailyPipelineChart(elementId, labels, dataset) {
         {
           label: 'Applications',
           data: dataset.applications,
-          backgroundColor: 'rgba(56, 189, 248, 0.8)',
+          backgroundColor: getAccentColor(1, FALLBACK_COLORS.accent1),
           borderRadius: 6,
           maxBarThickness: 18
         },
         {
           label: 'Viewings',
           data: dataset.viewings,
-          backgroundColor: 'rgba(125, 211, 252, 0.7)',
+          backgroundColor: getAccentColor(2, FALLBACK_COLORS.accent2),
           borderRadius: 6,
           maxBarThickness: 18
         },
         {
           label: 'Placements',
           data: dataset.placements,
-          backgroundColor: 'rgba(74, 222, 128, 0.85)',
+          backgroundColor: getAccentColor(3, FALLBACK_COLORS.accent3),
           borderRadius: 6,
           maxBarThickness: 18
         }
@@ -859,8 +874,11 @@ function createDailyPipelineChart(elementId, labels, dataset) {
 function refreshDailyPipelineChart(chart, labels, dataset) {
   chart.data.labels = labels;
   chart.data.datasets[0].data = dataset.applications;
+  chart.data.datasets[0].backgroundColor = getAccentColor(1, FALLBACK_COLORS.accent1);
   chart.data.datasets[1].data = dataset.viewings;
+  chart.data.datasets[1].backgroundColor = getAccentColor(2, FALLBACK_COLORS.accent2);
   chart.data.datasets[2].data = dataset.placements;
+  chart.data.datasets[2].backgroundColor = getAccentColor(3, FALLBACK_COLORS.accent3);
   chart.update();
 }
 
@@ -874,21 +892,21 @@ function createAttendanceChart(elementId, labels, dataset) {
         {
           label: 'Viewings',
           data: dataset.viewings,
-          backgroundColor: 'rgba(56, 189, 248, 0.75)',
+          backgroundColor: getAccentColor(1, FALLBACK_COLORS.accent1),
           borderRadius: 6,
           maxBarThickness: 20
         },
         {
           label: 'No-Shows',
           data: dataset.noShows,
-          backgroundColor: 'rgba(248, 113, 113, 0.8)',
+          backgroundColor: getAccentColor(4, FALLBACK_COLORS.accent4),
           borderRadius: 6,
           maxBarThickness: 20
         },
         {
           label: 'Placements',
           data: dataset.placements,
-          backgroundColor: 'rgba(74, 222, 128, 0.85)',
+          backgroundColor: getAccentColor(3, FALLBACK_COLORS.accent3),
           borderRadius: 6,
           maxBarThickness: 20
         }
@@ -914,8 +932,11 @@ function createAttendanceChart(elementId, labels, dataset) {
 function refreshAttendanceChart(chart, labels, dataset) {
   chart.data.labels = labels;
   chart.data.datasets[0].data = dataset.viewings;
+  chart.data.datasets[0].backgroundColor = getAccentColor(1, FALLBACK_COLORS.accent1);
   chart.data.datasets[1].data = dataset.noShows;
+  chart.data.datasets[1].backgroundColor = getAccentColor(4, FALLBACK_COLORS.accent4);
   chart.data.datasets[2].data = dataset.placements;
+  chart.data.datasets[2].backgroundColor = getAccentColor(3, FALLBACK_COLORS.accent3);
   chart.update();
 }
 
@@ -929,14 +950,14 @@ function createRentCollectionChart(elementId, rent) {
         {
           label: 'Expected Rent',
           data: rent.expected,
-          backgroundColor: 'rgba(56, 189, 248, 0.8)',
+          backgroundColor: getAccentColor(2, FALLBACK_COLORS.accent2),
           borderRadius: 8,
           maxBarThickness: 28
         },
         {
           label: 'Actual Rent',
           data: rent.actual,
-          backgroundColor: 'rgba(74, 222, 128, 0.8)',
+          backgroundColor: getAccentColor(1, FALLBACK_COLORS.accent1),
           borderRadius: 8,
           maxBarThickness: 28
         }
@@ -960,7 +981,9 @@ function createRentCollectionChart(elementId, rent) {
 function refreshRentCollectionChart(chart, rent) {
   chart.data.labels = rent.months;
   chart.data.datasets[0].data = rent.expected;
+  chart.data.datasets[0].backgroundColor = getAccentColor(2, FALLBACK_COLORS.accent2);
   chart.data.datasets[1].data = rent.actual;
+  chart.data.datasets[1].backgroundColor = getAccentColor(1, FALLBACK_COLORS.accent1);
   chart.update();
 }
 
@@ -974,14 +997,14 @@ function createDefaultRateChart(elementId, defaultRate) {
         {
           label: 'Units Paid',
           data: defaultRate.paid,
-          backgroundColor: 'rgba(74, 222, 128, 0.85)',
+          backgroundColor: getAccentColor(1, FALLBACK_COLORS.accent1),
           borderRadius: 8,
           maxBarThickness: 26
         },
         {
           label: 'Units Unpaid',
           data: defaultRate.unpaid,
-          backgroundColor: 'rgba(248, 113, 113, 0.85)',
+          backgroundColor: getAccentColor(4, FALLBACK_COLORS.accent4),
           borderRadius: 8,
           maxBarThickness: 26
         }
@@ -1005,7 +1028,9 @@ function createDefaultRateChart(elementId, defaultRate) {
 function refreshDefaultRateChart(chart, defaultRate) {
   chart.data.labels = defaultRate.months;
   chart.data.datasets[0].data = defaultRate.paid;
+  chart.data.datasets[0].backgroundColor = getAccentColor(1, FALLBACK_COLORS.accent1);
   chart.data.datasets[1].data = defaultRate.unpaid;
+  chart.data.datasets[1].backgroundColor = getAccentColor(4, FALLBACK_COLORS.accent4);
   chart.update();
 }
 
@@ -1020,7 +1045,7 @@ function createPaymentPunctualityChart(elementId, punctuality) {
         {
           label: '% of Rent Received',
           data: punctuality.values,
-          backgroundColor: 'rgba(56, 189, 248, 0.85)',
+          backgroundColor: getAccentColor(1, FALLBACK_COLORS.accent1),
           borderRadius: 8,
           maxBarThickness: 28
         }
@@ -1066,7 +1091,7 @@ function refreshPaymentPunctualityChart(chart, punctuality) {
   document.getElementById('paymentPunctualityCaption').textContent = `Share of monthly rent received each day — ${punctuality.label}`;
   chart.data.labels = punctuality.days;
   chart.data.datasets[0].data = punctuality.values;
-  chart.data.datasets[0].backgroundColor = 'rgba(56, 189, 248, 0.85)';
+  chart.data.datasets[0].backgroundColor = getAccentColor(1, FALLBACK_COLORS.accent1);
   chart.update();
 }
 
@@ -1080,7 +1105,7 @@ function createVacancyTrendChart(elementId, trend) {
         {
           label: 'Vacancy Rate',
           data: trend.rates,
-          backgroundColor: 'rgba(99, 102, 241, 0.8)',
+          backgroundColor: getAccentColor(2, FALLBACK_COLORS.accent2),
           borderRadius: 8,
           maxBarThickness: 28
         }
@@ -1118,6 +1143,7 @@ function createVacancyTrendChart(elementId, trend) {
 function refreshVacancyTrendChart(chart, trend) {
   chart.data.labels = trend.months;
   chart.data.datasets[0].data = trend.rates;
+  chart.data.datasets[0].backgroundColor = getAccentColor(2, FALLBACK_COLORS.accent2);
   chart.update();
 }
 
@@ -1131,7 +1157,7 @@ function createNewInventoryChart(elementId, inventory) {
         {
           label: 'New Buildings Online',
           data: inventory.buildings,
-          backgroundColor: 'rgba(74, 222, 128, 0.85)',
+          backgroundColor: getAccentColor(1, FALLBACK_COLORS.accent1),
           borderRadius: 8,
           maxBarThickness: 28
         }
@@ -1168,5 +1194,6 @@ function createNewInventoryChart(elementId, inventory) {
 function refreshNewInventoryChart(chart, inventory) {
   chart.data.labels = inventory.months;
   chart.data.datasets[0].data = inventory.buildings;
+  chart.data.datasets[0].backgroundColor = getAccentColor(1, FALLBACK_COLORS.accent1);
   chart.update();
 }

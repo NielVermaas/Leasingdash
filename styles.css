@@ -1,46 +1,54 @@
 :root {
-  --bg: #0f172a;
-  --bg-gradient-1: rgba(56, 189, 248, 0.15);
-  --bg-gradient-2: rgba(74, 222, 128, 0.12);
-  --surface: #111c33;
-  --surface-alt: #15203b;
-  --surface-contrast: rgba(15, 23, 42, 0.45);
-  --accent: #38bdf8;
-  --accent-soft: rgba(56, 189, 248, 0.15);
-  --text-primary: #f8fafc;
-  --text-muted: #cbd5f5;
-  --border: rgba(148, 163, 208, 0.15);
-  --success: #4ade80;
-  --warning: #facc15;
+  --bg: #021512;
+  --bg-gradient-1: rgba(66, 212, 142, 0.18);
+  --bg-gradient-2: rgba(12, 59, 46, 0.28);
+  --surface: #0c3b2e;
+  --surface-alt: #104736;
+  --surface-contrast: rgba(2, 21, 18, 0.58);
+  --accent: #42d48e;
+  --accent-soft: rgba(66, 212, 142, 0.18);
+  --text-primary: #f0fff5;
+  --text-muted: #92d9b5;
+  --border: rgba(146, 217, 181, 0.28);
+  --success: #42d48e;
+  --warning: #0c3b2e;
   --card-shadow: none;
   --panel-shadow: none;
-  --panel-item-bg: rgba(15, 23, 42, 0.45);
-  --chart-text: #cbd5f5;
-  --chart-grid: rgba(148, 163, 208, 0.15);
-  --tooltip-bg: rgba(15, 23, 42, 0.9);
-  --tooltip-border: rgba(148, 163, 208, 0.3);
-  --axis-title: #94a3c1;
+  --panel-item-bg: rgba(2, 21, 18, 0.52);
+  --chart-text: #a6e2c3;
+  --chart-grid: rgba(146, 217, 181, 0.22);
+  --tooltip-bg: rgba(2, 21, 18, 0.92);
+  --tooltip-border: rgba(146, 217, 181, 0.35);
+  --axis-title: #b7f0cf;
+  --chart-accent-1: rgba(66, 212, 142, 0.85);
+  --chart-accent-2: rgba(12, 59, 46, 0.85);
+  --chart-accent-3: rgba(214, 255, 92, 0.85);
+  --chart-accent-4: rgba(202, 166, 255, 0.85);
   font-size: 16px;
 }
 
 body.theme-light {
-  --bg: #f8fafc;
-  --bg-gradient-1: rgba(56, 189, 248, 0.08);
-  --bg-gradient-2: rgba(148, 163, 208, 0.18);
+  --bg: #f6fff8;
+  --bg-gradient-1: rgba(66, 212, 142, 0.14);
+  --bg-gradient-2: rgba(12, 59, 46, 0.1);
   --surface: #ffffff;
-  --surface-alt: #eff6ff;
+  --surface-alt: #f3fff7;
   --surface-contrast: rgba(255, 255, 255, 0.9);
-  --text-primary: #0f172a;
-  --text-muted: #475569;
-  --border: rgba(148, 163, 208, 0.35);
+  --text-primary: #022015;
+  --text-muted: #4a725e;
+  --border: rgba(12, 59, 46, 0.18);
   --card-shadow: none;
   --panel-shadow: none;
-  --panel-item-bg: rgba(255, 255, 255, 0.88);
-  --chart-text: #1e293b;
-  --chart-grid: rgba(148, 163, 208, 0.4);
-  --tooltip-bg: rgba(15, 23, 42, 0.92);
-  --tooltip-border: rgba(15, 23, 42, 0.35);
-  --axis-title: #1e293b;
+  --panel-item-bg: rgba(255, 255, 255, 0.9);
+  --chart-text: #0c3b2e;
+  --chart-grid: rgba(12, 59, 46, 0.18);
+  --tooltip-bg: rgba(2, 21, 18, 0.9);
+  --tooltip-border: rgba(12, 59, 46, 0.3);
+  --axis-title: #0c3b2e;
+  --chart-accent-1: rgba(66, 212, 142, 0.85);
+  --chart-accent-2: rgba(12, 59, 46, 0.85);
+  --chart-accent-3: rgba(214, 255, 92, 0.85);
+  --chart-accent-4: rgba(202, 166, 255, 0.85);
 }
 
 * {
@@ -64,19 +72,23 @@ body.print-mode {
   --surface: #ffffff;
   --surface-alt: #ffffff;
   --surface-contrast: #ffffff;
-  --text-primary: #0f172a;
-  --text-muted: #475569;
-  --border: rgba(148, 163, 208, 0.4);
+  --text-primary: #022015;
+  --text-muted: #3f6b57;
+  --border: rgba(12, 59, 46, 0.22);
   --card-shadow: none;
   --panel-shadow: none;
   --panel-item-bg: #ffffff;
-  --chart-text: #1e293b;
-  --chart-grid: rgba(148, 163, 208, 0.35);
-  --tooltip-bg: rgba(15, 23, 42, 0.85);
-  --tooltip-border: rgba(148, 163, 208, 0.4);
-  --axis-title: #1e293b;
+  --chart-text: #0c3b2e;
+  --chart-grid: rgba(12, 59, 46, 0.2);
+  --tooltip-bg: rgba(2, 21, 18, 0.85);
+  --tooltip-border: rgba(12, 59, 46, 0.28);
+  --axis-title: #0c3b2e;
+  --chart-accent-1: rgba(66, 212, 142, 0.85);
+  --chart-accent-2: rgba(12, 59, 46, 0.85);
+  --chart-accent-3: rgba(214, 255, 92, 0.85);
+  --chart-accent-4: rgba(202, 166, 255, 0.85);
   background: #ffffff !important;
-  color: #0f172a !important;
+  color: #022015 !important;
 }
 
 .sr-only {
@@ -148,20 +160,20 @@ body.print-mode {
   font-size: 0.9rem;
   font-family: inherit;
   font-weight: 500;
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"><path fill="%23cbd5f5" d="M1.41 0L6 4.59 10.59 0 12 1.41 6 7.41 0 1.41z"/></svg>');
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"><path fill="%2392d9b5" d="M1.41 0L6 4.59 10.59 0 12 1.41 6 7.41 0 1.41z"/></svg>');
   background-repeat: no-repeat;
   background-position: right 0.9rem center;
   transition: background 0.3s ease, color 0.3s ease, border 0.3s ease;
 }
 
 body.theme-light .select-control select {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"><path fill="%23475569" d="M1.41 0L6 4.59 10.59 0 12 1.41 6 7.41 0 1.41z"/></svg>');
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"><path fill="%234a725e" d="M1.41 0L6 4.59 10.59 0 12 1.41 6 7.41 0 1.41z"/></svg>');
 }
 
 .select-control select:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35);
-  border-color: rgba(56, 189, 248, 0.6);
+  box-shadow: 0 0 0 2px rgba(66, 212, 142, 0.32);
+  border-color: rgba(66, 212, 142, 0.58);
 }
 
 .theme-toggle {
@@ -355,7 +367,7 @@ body.print-mode .panel,
 body.print-mode .panel__item,
 body.print-mode .insight {
   background: #ffffff !important;
-  color: #0f172a !important;
+  color: #022015 !important;
   box-shadow: none !important;
 }
 
@@ -364,18 +376,18 @@ body.print-mode .kpi-card h2,
 body.print-mode .kpi-card__meta,
 body.print-mode .panel__item-header p,
 body.print-mode .insight ul {
-  color: #475569 !important;
+  color: #3f6b57 !important;
 }
 
 body.print-mode .select-control select {
   background: #ffffff !important;
-  color: #0f172a !important;
-  border-color: rgba(148, 163, 208, 0.6) !important;
+  color: #022015 !important;
+  border-color: rgba(12, 59, 46, 0.32) !important;
   box-shadow: none !important;
 }
 
 body.print-mode .select-control span {
-  color: #475569 !important;
+  color: #3f6b57 !important;
 }
 
 body.print-mode .theme-toggle {
