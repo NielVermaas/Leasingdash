@@ -323,7 +323,7 @@ body.print-mode .select-control span {
 }
 
 body.print-mode .page {
-  padding: 0.6rem 0 1.2rem;
+  padding: 1.5cm 1.6cm 1.8cm;
   max-width: none;
 }
 
@@ -358,17 +358,20 @@ body.print-mode .layout {
 body.print-mode .panel {
   padding: 1.1rem;
   border-radius: 1rem;
-  break-inside: auto;
-  page-break-inside: auto;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 body.print-mode .panel h2 {
   font-size: 1.15rem;
   margin-bottom: 0.9rem;
+  page-break-after: avoid;
 }
 
 body.print-mode .panel__grid {
   gap: 1rem;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 body.print-mode .panel__grid--split {
@@ -441,7 +444,7 @@ body.print-mode canvas {
 }
 
 @page {
-  margin: 1cm;
+  margin: 0;
 }
 
 @media print {
@@ -452,7 +455,16 @@ body.print-mode canvas {
   .page {
     max-width: none;
     margin: 0;
-    padding: 0.6rem 0 1.2rem;
+    padding: 1.5cm 1.6cm 1.8cm;
+  }
+
+  body::after {
+    content: 'Page ' counter(page);
+    position: fixed;
+    bottom: 0.7cm;
+    right: 1cm;
+    font-size: 0.75rem;
+    color: #022015;
   }
 
   .page__header {
@@ -471,8 +483,8 @@ body.print-mode canvas {
   }
 
   .panel {
-    break-inside: auto;
-    page-break-inside: auto;
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .panel__item,
