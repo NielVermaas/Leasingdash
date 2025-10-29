@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Residential Leasing Performance Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <script src="dashboard.js" defer></script>
+</head>
+<body>
+  <div class="page">
+    <header class="page__header">
+      <div>
+        <h1 id="dashboardTitle">Residential Portfolio Dashboard</h1>
+        <p class="page__subtitle" id="portfolioSubtitle"></p>
+      </div>
+      <div class="header__controls">
+        <label class="select-control">
+          <span>Month</span>
+          <select id="monthSelect" aria-label="Filter by month"></select>
+        </label>
+        <label class="select-control">
+          <span>Year</span>
+          <select id="yearSelect" aria-label="Filter by year"></select>
+        </label>
+      </div>
+    </header>
+
+    <section class="kpi-strip">
+      <article class="kpi-card">
+        <h2>Vacancy Snapshot</h2>
+        <div class="kpi-card__value" id="vacancyRate"></div>
+        <p class="kpi-card__meta" id="vacancyDetail"></p>
+      </article>
+      <article class="kpi-card">
+        <h2>Incoming Supply</h2>
+        <div class="kpi-card__value" id="incomingSupply"></div>
+        <p class="kpi-card__meta" id="incomingDetail"></p>
+      </article>
+      <article class="kpi-card">
+        <h2>Payment Discipline</h2>
+        <div class="kpi-card__value" id="paymentDiscipline"></div>
+        <p class="kpi-card__meta" id="paymentDetail"></p>
+      </article>
+      <article class="kpi-card">
+        <h2>Average Lease Duration</h2>
+        <div class="kpi-card__value" id="averageLeaseDuration"></div>
+        <p class="kpi-card__meta" id="averageLeaseDetail"></p>
+      </article>
+    </section>
+
+    <main class="layout">
+      <section class="panel">
+        <h2>Placement Performance</h2>
+        <div class="panel__grid">
+          <div class="panel__item panel__item--wide">
+            <header class="panel__item-header">
+              <h3>Daily Lead Pipeline</h3>
+              <p>Tracks how many applications, viewings, and placements occur each day of the selected month.</p>
+            </header>
+            <canvas id="dailyPipelineChart" height="280"></canvas>
+          </div>
+          <div class="panel__item panel__item--wide">
+            <header class="panel__item-header">
+              <h3>Attendance Breakdown</h3>
+              <p>Compares scheduled viewings, no-shows, and placements for each day of the month.</p>
+            </header>
+            <canvas id="attendanceChart" height="280"></canvas>
+          </div>
+          <div class="panel__item panel__item--wide">
+            <header class="panel__item-header">
+              <h3>Monthly Totals &amp; Conversion</h3>
+            </header>
+            <div class="totals">
+              <div class="total">
+                <span class="total__label">Applications</span>
+                <span class="total__value" id="totalApplications"></span>
+              </div>
+              <div class="total">
+                <span class="total__label">Viewings</span>
+                <span class="total__value" id="totalViewings"></span>
+              </div>
+              <div class="total">
+                <span class="total__label">Placements</span>
+                <span class="total__value" id="totalPlacements"></span>
+              </div>
+              <div class="total">
+                <span class="total__label">No-Show Rate</span>
+                <span class="total__value" id="totalNoShowRate"></span>
+              </div>
+              <div class="total">
+                <span class="total__label">Lead ➜ Placement</span>
+                <span class="total__value" id="leadToPlacement"></span>
+              </div>
+              <div class="total">
+                <span class="total__label">Viewing ➜ Placement</span>
+                <span class="total__value" id="viewingToPlacement"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Tenant Performance</h2>
+        <div class="panel__grid panel__grid--split">
+          <div class="panel__item">
+            <header class="panel__item-header">
+              <h3>Rent Collection Progress</h3>
+              <p>Shows the expected versus actual rent collected by the 5th for every month of the year.</p>
+            </header>
+            <canvas id="rentCollectionChart" height="280"></canvas>
+          </div>
+          <div class="panel__item">
+            <header class="panel__item-header">
+              <h3>Default Rate by Month</h3>
+              <p>Displays how many units are paid versus unpaid by the 5th in each month.</p>
+            </header>
+            <canvas id="defaultRateChart" height="280"></canvas>
+          </div>
+          <div class="panel__item panel__item--wide">
+            <header class="panel__item-header">
+              <h3>Payment Punctuality</h3>
+              <p id="paymentPunctualityCaption">Shows the share of monthly rent received each day for the selected rent run.</p>
+            </header>
+            <canvas id="paymentPunctualityChart" height="220"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Portfolio Supply Trends</h2>
+        <div class="panel__grid">
+          <div class="panel__item">
+            <header class="panel__item-header">
+              <h3>Vacancy Rate by Month</h3>
+              <p>Highlights the vacancy rate for active buildings during each month of the year.</p>
+            </header>
+            <canvas id="vacancyTrendChart" height="280"></canvas>
+          </div>
+          <div class="panel__item">
+            <header class="panel__item-header">
+              <h3>New Buildings Coming Online</h3>
+              <p>Summarizes how many new buildings join the active portfolio every month.</p>
+            </header>
+            <canvas id="newInventoryChart" height="280"></canvas>
+          </div>
+        </div>
+      </section>
+    </main>
+
+  </div>
+</body>
+</html>
