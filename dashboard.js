@@ -49,6 +49,24 @@ function buildTypicalPunctualityDistribution() {
   );
 }
 
+function getBufferedScaleMax(values, { multiplier = 1.1, minBuffer = 0, cap = null } = {}) {
+  if (!Array.isArray(values) || values.length === 0) {
+    return undefined;
+  }
+  const maxValue = Math.max(...values);
+  if (!Number.isFinite(maxValue)) {
+    return undefined;
+  }
+  let buffered = maxValue * multiplier;
+  if (minBuffer > 0) {
+    buffered = Math.max(buffered, maxValue + minBuffer);
+  }
+  if (cap !== null) {
+    buffered = Math.min(buffered, cap);
+  }
+  return buffered;
+}
+
 function buildTimeframeKey(monthKey, year) {
   return `${year}-${monthKey}`;
 }
@@ -1032,6 +1050,11 @@ function refreshPaymentPunctualityChart(chart, punctuality) {
 
 function createVacancyTrendChart(elementId, trend) {
   const ctx = document.getElementById(elementId);
+  const suggestedMax = getBufferedScaleMax(trend.rates, {
+    multiplier: 1.12,
+    minBuffer: 0.02,
+    cap: 1
+  });
   return new Chart(ctx, {
     type: 'bar',
     data: {
@@ -1063,6 +1086,7 @@ function createVacancyTrendChart(elementId, trend) {
         },
         y: {
           beginAtZero: true,
+          suggestedMax,
           grid: { color: getThemeToken('chartGrid') },
           ticks: {
             callback(value) {
@@ -1079,11 +1103,23 @@ function refreshVacancyTrendChart(chart, trend) {
   chart.data.labels = trend.months;
   chart.data.datasets[0].data = trend.rates;
   chart.data.datasets[0].backgroundColor = getAccentColor(2, FALLBACK_COLORS.accent2);
+  const suggestedMax = getBufferedScaleMax(trend.rates, {
+    multiplier: 1.12,
+    minBuffer: 0.02,
+    cap: 1
+  });
+  if (suggestedMax !== undefined) {
+    chart.options.scales.y.suggestedMax = suggestedMax;
+  }
   chart.update();
 }
 
 function createNewInventoryChart(elementId, inventory) {
   const ctx = document.getElementById(elementId);
+  const suggestedMax = getBufferedScaleMax(inventory.buildings, {
+    multiplier: 1.15,
+    minBuffer: 1
+  });
   return new Chart(ctx, {
     type: 'bar',
     data: {
@@ -1115,6 +1151,7 @@ function createNewInventoryChart(elementId, inventory) {
         },
         y: {
           beginAtZero: true,
+          suggestedMax,
           grid: { color: getThemeToken('chartGrid') },
           ticks: {
             precision: 0,
@@ -1130,5 +1167,12 @@ function refreshNewInventoryChart(chart, inventory) {
   chart.data.labels = inventory.months;
   chart.data.datasets[0].data = inventory.buildings;
   chart.data.datasets[0].backgroundColor = getAccentColor(1, FALLBACK_COLORS.accent1);
+  const suggestedMax = getBufferedScaleMax(inventory.buildings, {
+    multiplier: 1.15,
+    minBuffer: 1
+  });
+  if (suggestedMax !== undefined) {
+    chart.options.scales.y.suggestedMax = suggestedMax;
+  }
   chart.update();
 }
