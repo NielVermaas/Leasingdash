@@ -36,7 +36,7 @@ If your remote repository is empty, push the latest dashboard commit:
    - **Core Portfolio · Sep 2024** – forward-looking projections with improved conversions.
    - **Urban Lease-Up · Aug 2024** – a downtown asset in lease-up with heavier traffic.
 4. Toggle between dark and light mode with the moon/sun button next to the scenario selector. The dashboard remembers your choice for the next visit.
-5. Review the KPI cards and charts to understand how the selected scenario is performing across placement, tenant, and supply metrics.
+5. Review the KPI cards—vacancy snapshot, incoming supply, and payment discipline—and the supporting charts to understand how the selected scenario is performing across placement, tenant, and supply metrics.
 
 No build step is required—the dashboard is a static page.
 

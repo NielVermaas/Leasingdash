@@ -167,14 +167,15 @@ body.theme-light .scenario-select select {
 
 .kpi-strip {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.2rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  align-items: stretch;
 }
 
 .kpi-card {
   background: var(--surface);
   border-radius: 1rem;
-  padding: 1.4rem;
+  padding: 1.6rem 1.5rem;
   border: 1px solid var(--border);
   box-shadow: var(--card-shadow);
   transition: background 0.3s ease, color 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
@@ -182,15 +183,15 @@ body.theme-light .scenario-select select {
 
 .kpi-card h2 {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.95rem;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
 
 .kpi-card__value {
-  margin: 0.6rem 0 0.3rem;
-  font-size: 1.1rem;
+  margin: 0.75rem 0 0.4rem;
+  font-size: 1.35rem;
   font-weight: 600;
 }
 
@@ -198,6 +199,7 @@ body.theme-light .scenario-select select {
   margin: 0;
   font-size: 0.85rem;
   color: var(--text-muted);
+  line-height: 1.4;
 }
 
 .layout {

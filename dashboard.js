@@ -420,13 +420,6 @@ function updateKpis(scenario) {
   const totals = summarizePipeline(scenario.pipeline);
   const noShowRate = computeNoShowRate(scenario.pipeline);
 
-  document.getElementById('funnelHeadline').textContent = `Applications ${totals.applications} → Viewings ${totals.viewings} → Placements ${totals.placements}`;
-  document.getElementById('funnelMeta').textContent = [
-    `Lead to Viewing: ${formatPercent(totals.viewingRatio)}`,
-    `Viewing to Placement: ${formatPercent(totals.placementRatioFromViewings)}`,
-    `Lead to Placement: ${formatPercent(totals.placementRatio)}`
-  ].join(' | ');
-
   document.getElementById('vacancyRate').textContent = formatPercent(scenario.supply.vacancyRate);
   document.getElementById('vacancyDetail').textContent = scenario.supply.vacancyDetail;
   document.getElementById('incomingSupply').textContent = formatPercent(scenario.supply.incomingRate);
