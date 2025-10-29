@@ -101,7 +101,15 @@ body {
   flex-wrap: wrap;
 }
 
-.scenario-select {
+.header__filters {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.select-control {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
@@ -111,7 +119,7 @@ body {
   letter-spacing: 0.04em;
 }
 
-.scenario-select select {
+.select-control select {
   appearance: none;
   padding: 0.6rem 2.4rem 0.6rem 1rem;
   border-radius: 999px;
@@ -127,11 +135,11 @@ body {
   transition: background 0.3s ease, color 0.3s ease, border 0.3s ease;
 }
 
-body.theme-light .scenario-select select {
+body.theme-light .select-control select {
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"><path fill="%23475569" d="M1.41 0L6 4.59 10.59 0 12 1.41 6 7.41 0 1.41z"/></svg>');
 }
 
-.scenario-select select:focus {
+.select-control select:focus {
   outline: none;
   box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35);
   border-color: rgba(56, 189, 248, 0.6);

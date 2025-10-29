@@ -30,7 +30,7 @@ If your remote repository is empty, push the latest dashboard commit:
 
 1. Clone or download the repository.
 2. Open `index.html` in a modern browser with internet access so the Chart.js CDN can load.
-3. Use the **Scenario** selector in the top-right corner to switch between the four versions:
+3. Use the **Month** and **Year** filters to focus on a specific rent cycle, then pick a **Scenario** to compare the available views:
    - **Core Portfolio · Aug 2024** – the original August view of the stabilized portfolio.
    - **Core Portfolio · Jul 2024** – a slower month with higher vacancy and late payments.
    - **Core Portfolio · Sep 2024** – forward-looking projections with improved conversions.

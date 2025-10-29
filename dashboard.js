@@ -42,6 +42,46 @@ function buildTypicalPunctualityDistribution() {
   );
 }
 
+function populateScenarioOptions(selectElement, scenarios, scenarioOrder, monthKey, year, preferredKey) {
+  if (!selectElement) {
+    return preferredKey;
+  }
+
+  const normalizedYear = Number(year);
+  const matchingKeys = scenarioOrder.filter((key) => {
+    const timeframe = scenarios[key].timeframe;
+    return timeframe.monthKey === monthKey && timeframe.year === normalizedYear;
+  });
+
+  const previousValue = selectElement.value;
+  selectElement.innerHTML = '';
+
+  const keysToRender = matchingKeys.length > 0 ? matchingKeys : scenarioOrder;
+
+  keysToRender.forEach((key) => {
+    const option = document.createElement('option');
+    option.value = key;
+    option.textContent = scenarios[key].optionLabel;
+    selectElement.appendChild(option);
+  });
+
+  let selectedKey = null;
+
+  if (preferredKey && keysToRender.includes(preferredKey)) {
+    selectedKey = preferredKey;
+  } else if (keysToRender.includes(previousValue)) {
+    selectedKey = previousValue;
+  } else if (keysToRender.length > 0) {
+    [selectedKey] = keysToRender;
+  }
+
+  if (selectedKey) {
+    selectElement.value = selectedKey;
+  }
+
+  return selectedKey;
+}
+
 const THEME_STORAGE_KEY = 'leasingdash-theme';
 let currentThemeTokens = null;
 
@@ -53,22 +93,117 @@ document.addEventListener('DOMContentLoaded', () => {
   const scenarios = buildScenarios();
   const scenarioKeys = Object.keys(scenarios);
   const scenarioSelect = document.getElementById('scenarioSelect');
+  const monthSelect = document.getElementById('monthSelect');
+  const yearSelect = document.getElementById('yearSelect');
 
-  scenarioKeys.forEach((key) => {
-    const option = document.createElement('option');
-    option.value = key;
-    option.textContent = scenarios[key].optionLabel;
-    scenarioSelect.appendChild(option);
-  });
+  const monthOptions = Array.from(
+    scenarioKeys.reduce((map, key) => {
+      const { monthKey, monthLabel } = scenarios[key].timeframe;
+      if (!map.has(monthKey)) {
+        map.set(monthKey, monthLabel);
+      }
+      return map;
+    }, new Map())
+  ).sort((a, b) => Number(a[0]) - Number(b[0]));
+
+  const yearOptions = Array.from(
+    scenarioKeys.reduce((set, key) => set.add(scenarios[key].timeframe.year), new Set())
+  ).sort((a, b) => a - b);
+
+  if (monthSelect) {
+    monthOptions.forEach(([value, label]) => {
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = label;
+      monthSelect.appendChild(option);
+    });
+  }
+
+  if (yearSelect) {
+    yearOptions.forEach((year) => {
+      const option = document.createElement('option');
+      option.value = String(year);
+      option.textContent = String(year);
+      yearSelect.appendChild(option);
+    });
+  }
 
   const initialKey = scenarioKeys[0];
-  scenarioSelect.value = initialKey;
-  updateScenario(scenarios[initialKey], state);
+  const initialScenario = scenarios[initialKey];
+
+  if (monthSelect) {
+    monthSelect.value = initialScenario.timeframe.monthKey;
+  }
+  if (yearSelect) {
+    yearSelect.value = String(initialScenario.timeframe.year);
+  }
+
+  let activeScenarioKey = populateScenarioOptions(
+    scenarioSelect,
+    scenarios,
+    scenarioKeys,
+    monthSelect?.value || initialScenario.timeframe.monthKey,
+    yearSelect ? Number(yearSelect.value) : initialScenario.timeframe.year,
+    initialKey
+  );
+
+  if (!activeScenarioKey) {
+    activeScenarioKey = initialKey;
+  }
+
+  updateScenario(scenarios[activeScenarioKey], state);
 
   scenarioSelect.addEventListener('change', (event) => {
-    const selectedScenario = scenarios[event.target.value];
+    const selectedKey = event.target.value;
+    const selectedScenario = scenarios[selectedKey];
+    if (!selectedScenario) {
+      return;
+    }
+    activeScenarioKey = selectedKey;
     updateScenario(selectedScenario, state);
+    if (monthSelect) {
+      monthSelect.value = selectedScenario.timeframe.monthKey;
+    }
+    if (yearSelect) {
+      yearSelect.value = String(selectedScenario.timeframe.year);
+    }
+    activeScenarioKey = populateScenarioOptions(
+      scenarioSelect,
+      scenarios,
+      scenarioKeys,
+      selectedScenario.timeframe.monthKey,
+      selectedScenario.timeframe.year,
+      selectedKey
+    );
   });
+
+  const handleTimeframeChange = () => {
+    if (!monthSelect || !yearSelect) {
+      return;
+    }
+    const monthKey = monthSelect.value;
+    const year = Number(yearSelect.value);
+    const nextScenarioKey = populateScenarioOptions(
+      scenarioSelect,
+      scenarios,
+      scenarioKeys,
+      monthKey,
+      year,
+      activeScenarioKey
+    );
+    if (!nextScenarioKey) {
+      return;
+    }
+    activeScenarioKey = nextScenarioKey;
+    updateScenario(scenarios[activeScenarioKey], state);
+  };
+
+  if (monthSelect) {
+    monthSelect.addEventListener('change', handleTimeframeChange);
+  }
+  if (yearSelect) {
+    yearSelect.addEventListener('change', handleTimeframeChange);
+  }
 });
 
 function initializeTheme(state) {
@@ -178,6 +313,11 @@ function buildScenarios() {
       optionLabel: 'Core Portfolio · Aug 2024',
       title: 'Residential Portfolio Dashboard',
       subtitle: 'August 2024 • Portfolio Size: 120 units',
+      timeframe: {
+        monthKey: '08',
+        monthLabel: 'August',
+        year: 2024
+      },
       pipeline: buildPipeline(basePipeline, { days: 31 }),
       rent: {
         months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -230,6 +370,11 @@ function buildScenarios() {
       optionLabel: 'Core Portfolio · Jul 2024',
       title: 'Residential Portfolio Dashboard',
       subtitle: 'July 2024 • Portfolio Size: 120 units',
+      timeframe: {
+        monthKey: '07',
+        monthLabel: 'July',
+        year: 2024
+      },
       pipeline: buildPipeline(basePipeline, {
         days: 31,
         adjustments: {
@@ -290,6 +435,11 @@ function buildScenarios() {
       optionLabel: 'Core Portfolio · Sep 2024',
       title: 'Residential Portfolio Dashboard',
       subtitle: 'September 2024 • Portfolio Size: 120 units (projected)',
+      timeframe: {
+        monthKey: '09',
+        monthLabel: 'September',
+        year: 2024
+      },
       pipeline: buildPipeline(basePipeline, {
         days: 30,
         adjustments: {
@@ -350,6 +500,11 @@ function buildScenarios() {
       optionLabel: 'Urban Lease-Up · Aug 2024',
       title: 'Urban Lease-Up Dashboard',
       subtitle: 'August 2024 • Portfolio Size: 95 units',
+      timeframe: {
+        monthKey: '08',
+        monthLabel: 'August',
+        year: 2024
+      },
       pipeline: buildPipeline(basePipeline, {
         days: 31,
         adjustments: {
