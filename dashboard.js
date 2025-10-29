@@ -212,8 +212,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initializeTheme(state) {
-  if (getStoredTheme() === 'light') {
-    document.body.classList.add('theme-light');
+  if (getStoredTheme() === 'dark') {
+    document.body.classList.add('theme-dark');
   }
 
   currentThemeTokens = captureThemeTokens();
@@ -223,16 +223,16 @@ function initializeTheme(state) {
   if (!toggle) {
     return;
   }
-  const isLight = document.body.classList.contains('theme-light');
-  updateThemeToggleUi(toggle, isLight);
+  const isDark = document.body.classList.contains('theme-dark');
+  updateThemeToggleUi(toggle, !isDark);
 
   toggle.addEventListener('click', () => {
-    const nextIsLight = !document.body.classList.contains('theme-light');
-    document.body.classList.toggle('theme-light', nextIsLight);
-    persistTheme(nextIsLight ? 'light' : 'dark');
+    const nextIsDark = !document.body.classList.contains('theme-dark');
+    document.body.classList.toggle('theme-dark', nextIsDark);
+    persistTheme(nextIsDark ? 'dark' : 'light');
     currentThemeTokens = captureThemeTokens();
     applyChartDefaults(currentThemeTokens);
-    updateThemeToggleUi(toggle, nextIsLight);
+    updateThemeToggleUi(toggle, !nextIsDark);
     updateChartsTheme(state.charts);
   });
 }
@@ -249,17 +249,17 @@ function setupPrintMode(state) {
     if (originalTheme !== null) {
       return;
     }
-    originalTheme = document.body.classList.contains('theme-light') ? 'light' : 'dark';
+    originalTheme = document.body.classList.contains('theme-dark') ? 'dark' : 'light';
     document.body.classList.add('print-mode');
     if (originalTheme === 'dark') {
-      document.body.classList.add('theme-light');
+      document.body.classList.remove('theme-dark');
     }
     currentThemeTokens = captureThemeTokens();
     applyChartDefaults(currentThemeTokens);
     updateChartsTheme(state.charts);
     if (toggle) {
-      const isLight = document.body.classList.contains('theme-light');
-      updateThemeToggleUi(toggle, isLight);
+      const isDark = document.body.classList.contains('theme-dark');
+      updateThemeToggleUi(toggle, !isDark);
     }
   };
 
@@ -268,15 +268,15 @@ function setupPrintMode(state) {
       return;
     }
     if (originalTheme === 'dark') {
-      document.body.classList.remove('theme-light');
+      document.body.classList.add('theme-dark');
     }
     document.body.classList.remove('print-mode');
     currentThemeTokens = captureThemeTokens();
     applyChartDefaults(currentThemeTokens);
     updateChartsTheme(state.charts);
     if (toggle) {
-      const isLight = document.body.classList.contains('theme-light');
-      updateThemeToggleUi(toggle, isLight);
+      const isDark = document.body.classList.contains('theme-dark');
+      updateThemeToggleUi(toggle, !isDark);
     }
     originalTheme = null;
   };
