@@ -151,14 +151,14 @@ function buildScenarios() {
       subtitle: 'August 2024 • Portfolio Size: 120 units',
       pipeline: buildPipeline(basePipeline, { days: 31 }),
       rent: {
-        months: ['April', 'May', 'June', 'July', 'August', 'September'],
-        expected: [210000, 210000, 211000, 212000, 212000, 213000],
-        actual: [204000, 206000, 208000, 205000, 207000, 209000]
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        expected: [206500, 207000, 207500, 210000, 210000, 211000, 211500, 212000, 212500, 213000, 213500, 214000],
+        actual: [201500, 203000, 204500, 204000, 206000, 208000, 205000, 207000, 209000, 211000, 211500, 212500]
       },
       defaultRate: {
-        months: ['April', 'May', 'June', 'July', 'August', 'September'],
-        paid: [110, 111, 112, 108, 109, 110],
-        unpaid: [10, 9, 8, 12, 11, 10]
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        paid: [108, 109, 110, 110, 111, 112, 108, 109, 110, 111, 112, 112],
+        unpaid: [12, 11, 10, 10, 9, 8, 12, 11, 10, 9, 8, 8]
       },
       paymentPunctuality: {
         label: 'September 2024 rent run',
@@ -211,14 +211,14 @@ function buildScenarios() {
         }
       }),
       rent: {
-        months: ['March', 'April', 'May', 'June', 'July', 'August'],
-        expected: [209000, 210000, 210000, 211000, 211000, 212000],
-        actual: [203000, 204000, 206000, 207000, 205000, 206500]
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        expected: [205000, 205500, 206000, 207000, 207500, 208000, 209000, 209500, 210000, 211000, 211500, 212000],
+        actual: [199000, 200500, 202000, 203000, 204500, 205500, 205000, 206500, 207000, 208500, 209500, 210000]
       },
       defaultRate: {
-        months: ['March', 'April', 'May', 'June', 'July', 'August'],
-        paid: [109, 110, 111, 112, 108, 109],
-        unpaid: [11, 10, 9, 8, 12, 11]
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        paid: [107, 108, 109, 110, 111, 112, 108, 109, 110, 111, 111, 112],
+        unpaid: [13, 12, 11, 10, 9, 8, 12, 11, 10, 9, 9, 8]
       },
       paymentPunctuality: {
         label: 'July 2024 rent run',
@@ -271,14 +271,14 @@ function buildScenarios() {
         }
       }),
       rent: {
-        months: ['May', 'June', 'July', 'August', 'September', 'October'],
-        expected: [210500, 211000, 212000, 212500, 213000, 213500],
-        actual: [206000, 208000, 209500, 210000, 209000, 211500]
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        expected: [206000, 206500, 207000, 208000, 208500, 209500, 210500, 211500, 213000, 213500, 214000, 214500],
+        actual: [202000, 203000, 204000, 205000, 206000, 207000, 209500, 210000, 209000, 211500, 212500, 213500]
       },
       defaultRate: {
-        months: ['May', 'June', 'July', 'August', 'September', 'October'],
-        paid: [111, 112, 109, 110, 111, 112],
-        unpaid: [9, 8, 11, 10, 9, 8]
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        paid: [108, 109, 110, 111, 112, 112, 111, 111, 112, 113, 113, 114],
+        unpaid: [12, 11, 10, 9, 8, 8, 9, 9, 8, 7, 7, 6]
       },
       paymentPunctuality: {
         label: 'Projected October 2024 rent run',
@@ -331,14 +331,14 @@ function buildScenarios() {
         }
       }),
       rent: {
-        months: ['April', 'May', 'June', 'July', 'August', 'September'],
-        expected: [156000, 157500, 159000, 160500, 161000, 162500],
-        actual: [150000, 152500, 153800, 154500, 155800, 158000]
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        expected: [145000, 147000, 149000, 151000, 153000, 155000, 158000, 161000, 162500, 164000, 165500, 167000],
+        actual: [138000, 140500, 143000, 145500, 148000, 150500, 151800, 155800, 158000, 160500, 162000, 164500]
       },
       defaultRate: {
-        months: ['April', 'May', 'June', 'July', 'August', 'September'],
-        paid: [82, 83, 84, 82, 83, 84],
-        unpaid: [13, 12, 11, 13, 12, 11]
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        paid: [75, 76, 78, 79, 80, 81, 82, 83, 84, 84, 85, 86],
+        unpaid: [20, 19, 17, 16, 15, 14, 13, 12, 11, 11, 10, 9]
       },
       paymentPunctuality: {
         label: 'August 2024 rent run',
