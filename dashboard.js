@@ -166,10 +166,10 @@ function buildScenarios() {
         label: 'September 2024 rent run',
         days: [...monthDayLabels],
         values: [
-          1.8, 1.4, 1.1, 0.7, 0.5, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.3,
-          0.3, 0.3, 0.3, 0.3, 0.5, 0.5, 0.5, 0.5, 18, 17, 15, 13, 11, 9, 6
+          32, 18, 11, 6, 5, 4, 3, 2, 1.5, 1.5, 1.3, 1.1, 0.9, 0.8, 0.9, 0.8,
+          0.6, 0.6, 0.5, 0.5, 0.6, 0.6, 0.5, 0.5, 0.8, 1.2, 1.0, 0.8, 0.6, 0.5, 0.9
         ],
-        dueWindowDays: 7
+        dueWindowDays: 5
       },
       supply: {
         vacancyRate: 0.117,
@@ -229,10 +229,10 @@ function buildScenarios() {
         label: 'July 2024 rent run',
         days: [...monthDayLabels],
         values: [
-          2.2, 1.7, 1.3, 0.9, 0.6, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.35,
-          0.35, 0.35, 0.35, 0.35, 0.6, 0.6, 0.6, 0.6, 20, 18, 15, 12.5, 10.5, 6.5, 4.15
+          28, 16, 11, 6, 4, 4.2, 3.2, 2.2, 2.0, 1.4, 1.6, 1.5, 1.4, 1.3, 1.2, 1.3,
+          1.1, 0.9, 0.9, 0.8, 0.9, 0.8, 0.8, 0.7, 0.8, 1.4, 1.2, 1.0, 0.8, 0.8, 0.8
         ],
-        dueWindowDays: 7
+        dueWindowDays: 5
       },
       supply: {
         vacancyRate: 0.132,
@@ -292,10 +292,10 @@ function buildScenarios() {
         label: 'Projected October 2024 rent run',
         days: [...monthDayLabels],
         values: [
-          1.5, 1.2, 0.9, 0.6, 0.4, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.25,
-          0.25, 0.25, 0.25, 0.25, 0.45, 0.45, 0.45, 0.45, 17.5, 16.5, 15, 14, 12, 9, 6.85
+          31.5, 19.5, 11.2, 6.5, 5.0, 3.8, 3.1, 2.2, 1.6, 1.4, 1.2, 1.0, 0.9, 0.8, 0.8, 0.7,
+          0.6, 0.6, 0.5, 0.5, 0.6, 0.6, 0.6, 0.6, 0.7, 0.9, 0.8, 0.7, 0.4, 0.5, 0.2
         ],
-        dueWindowDays: 7
+        dueWindowDays: 5
       },
       supply: {
         vacancyRate: 0.095,
@@ -355,10 +355,10 @@ function buildScenarios() {
         label: 'August 2024 rent run',
         days: [...monthDayLabels],
         values: [
-          2.6, 2.0, 1.6, 1.2, 0.9, 0.35, 0.35, 0.35, 0.35, 0.35, 0.35, 0.35, 0.35, 0.35, 0.35, 0.45,
-          0.45, 0.45, 0.45, 0.45, 0.7, 0.7, 0.7, 0.7, 17.5, 16.5, 14, 12, 10, 7, 6.15
+          25, 15, 10, 5, 5, 4.5, 3.5, 2.5, 2.0, 1.5, 1.8, 1.6, 1.5, 1.5, 1.6, 1.4,
+          1.2, 1.1, 1.1, 1.2, 1.1, 1.0, 0.9, 0.9, 1.1, 1.4, 1.3, 1.1, 1.0, 1.0, 1.2
         ],
-        dueWindowDays: 7
+        dueWindowDays: 5
       },
       supply: {
         vacancyRate: 0.168,
@@ -838,7 +838,7 @@ function refreshPaymentPunctualityChart(chart, punctuality) {
 
 function buildPunctualityColors(length, dueWindowDays) {
   return Array.from({ length }, (_, idx) =>
-    idx >= length - dueWindowDays ? 'rgba(56, 189, 248, 0.85)' : 'rgba(148, 163, 208, 0.65)'
+    idx < dueWindowDays ? 'rgba(56, 189, 248, 0.85)' : 'rgba(148, 163, 208, 0.65)'
   );
 }
 
