@@ -23,11 +23,20 @@
           <div class="filter" id="filterProperty"></div>
           <div class="filter" id="filterBedroom"></div>
           <div class="filter" id="filterAgent"></div>
+          <div class="filter" id="filterDeveloper"></div>
+          <div class="filter" id="filterDevelopment"></div>
+          <div class="filter" id="filterFunding"></div>
         </div>
-        <label class="scenario-select">
-          <span>Scenario</span>
-          <select id="scenarioSelect" aria-label="Select dashboard scenario"></select>
-        </label>
+        <div class="header__actions">
+          <label class="scenario-select">
+            <span>Scenario</span>
+            <select id="scenarioSelect" aria-label="Select dashboard scenario"></select>
+          </label>
+          <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false" aria-label="Switch to light mode">
+            <span class="theme-toggle__icon" aria-hidden="true">🌙</span>
+            <span class="theme-toggle__label">Dark mode</span>
+          </button>
+        </div>
       </div>
     </header>
 

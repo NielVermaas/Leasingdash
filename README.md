@@ -35,6 +35,8 @@ If your remote repository is empty, push the latest dashboard commit:
    - **Core Portfolio · Jul 2024** – a slower month with higher vacancy and late payments.
    - **Core Portfolio · Sep 2024** – forward-looking projections with improved conversions.
    - **Urban Lease-Up · Aug 2024** – a downtown asset in lease-up with heavier traffic.
+4. Toggle between dark and light mode with the moon/sun button next to the scenario selector. The dashboard remembers your choice for the next visit.
+5. Review the filter chips (Property, Bedroom Mix, Agent, Developer, Development, Funding Bank) to confirm which subset of the portfolio you are viewing.
 
 No build step is required—the dashboard is a static page.
 
@@ -44,3 +46,4 @@ No build step is required—the dashboard is a static page.
 - Portfolio supply KPIs (vacancy, incoming units, conversion rates) recalculated automatically for each version.
 - Tenant performance trends (rent collection, default rates, payment punctuality) tailored to each scenario.
 - Summary insights that explain the drivers and focus areas for the active view.
+- Scenario-specific ownership filters so you can track Developer, Development, and Funding Bank context alongside the original leasing filters.

@@ -13,8 +13,13 @@ const basePipeline = {
   ]
 };
 
+const THEME_STORAGE_KEY = 'leasingdash-theme';
+let currentThemeTokens = null;
+
 document.addEventListener('DOMContentLoaded', () => {
-  applyChartDefaults();
+  const state = { charts: {} };
+
+  initializeTheme(state);
 
   const scenarios = buildScenarios();
   const scenarioKeys = Object.keys(scenarios);
@@ -27,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
     scenarioSelect.appendChild(option);
   });
 
-  const state = { charts: {} };
   const initialKey = scenarioKeys[0];
   scenarioSelect.value = initialKey;
   updateScenario(scenarios[initialKey], state);
@@ -38,6 +42,107 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+function initializeTheme(state) {
+  if (getStoredTheme() === 'light') {
+    document.body.classList.add('theme-light');
+  }
+
+  currentThemeTokens = captureThemeTokens();
+  applyChartDefaults(currentThemeTokens);
+
+  const toggle = document.getElementById('themeToggle');
+  if (!toggle) {
+    return;
+  }
+  const isLight = document.body.classList.contains('theme-light');
+  updateThemeToggleUi(toggle, isLight);
+
+  toggle.addEventListener('click', () => {
+    const nextIsLight = !document.body.classList.contains('theme-light');
+    document.body.classList.toggle('theme-light', nextIsLight);
+    persistTheme(nextIsLight ? 'light' : 'dark');
+    currentThemeTokens = captureThemeTokens();
+    applyChartDefaults(currentThemeTokens);
+    updateThemeToggleUi(toggle, nextIsLight);
+    updateChartsTheme(state.charts);
+  });
+}
+
+function getStoredTheme() {
+  try {
+    return localStorage.getItem(THEME_STORAGE_KEY);
+  } catch (error) {
+    return null;
+  }
+}
+
+function persistTheme(theme) {
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+  } catch (error) {
+    /* storage not available */
+  }
+}
+
+function captureThemeTokens() {
+  const styles = getComputedStyle(document.documentElement);
+  return {
+    chartText: styles.getPropertyValue('--chart-text').trim(),
+    chartGrid: styles.getPropertyValue('--chart-grid').trim(),
+    tooltipBg: styles.getPropertyValue('--tooltip-bg').trim(),
+    tooltipBorder: styles.getPropertyValue('--tooltip-border').trim(),
+    axisTitle: styles.getPropertyValue('--axis-title').trim(),
+    textMuted: styles.getPropertyValue('--text-muted').trim()
+  };
+}
+
+function getThemeToken(key) {
+  return currentThemeTokens ? currentThemeTokens[key] : undefined;
+}
+
+function updateThemeToggleUi(button, isLight) {
+  if (!button) return;
+  const icon = button.querySelector('.theme-toggle__icon');
+  const label = button.querySelector('.theme-toggle__label');
+  button.setAttribute('aria-pressed', String(isLight));
+  button.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
+  button.title = isLight ? 'Switch to dark mode' : 'Switch to light mode';
+  if (icon) {
+    icon.textContent = isLight ? '☀️' : '🌙';
+  }
+  if (label) {
+    label.textContent = isLight ? 'Light mode' : 'Dark mode';
+  }
+}
+
+function updateChartsTheme(charts) {
+  Object.values(charts).forEach((chart) => {
+    if (!chart) return;
+    const { options } = chart;
+    if (options.plugins?.tooltip) {
+      options.plugins.tooltip.backgroundColor = getThemeToken('tooltipBg');
+      options.plugins.tooltip.borderColor = getThemeToken('tooltipBorder');
+    }
+    if (options.plugins?.legend?.labels) {
+      options.plugins.legend.labels.color = getThemeToken('chartText');
+    }
+    if (options.scales) {
+      Object.values(options.scales).forEach((scale) => {
+        if (scale.ticks) {
+          scale.ticks.color = getThemeToken('chartText');
+        }
+        if (scale.grid) {
+          scale.grid.color = getThemeToken('chartGrid');
+        }
+        if (scale.title) {
+          scale.title.color = getThemeToken('axisTitle') || getThemeToken('chartText');
+        }
+      });
+    }
+    chart.update();
+  });
+}
+
 function buildScenarios() {
   return {
     'core-aug-2024': {
@@ -47,7 +152,10 @@ function buildScenarios() {
       filters: {
         property: 'Property: All',
         bedroom: 'Bedroom Mix: 1-3 BR',
-        agent: 'Agent: Leasing Team'
+        agent: 'Agent: Leasing Team',
+        developer: 'Developer: Horizon Living',
+        development: 'Development: Lakeside Residences',
+        bank: 'Funding Bank: First National'
       },
       pipeline: buildPipeline(basePipeline, { days: 31 }),
       rent: {
@@ -96,7 +204,10 @@ function buildScenarios() {
       filters: {
         property: 'Property: All',
         bedroom: 'Bedroom Mix: 1-3 BR',
-        agent: 'Agent: Leasing Team'
+        agent: 'Agent: Leasing Team',
+        developer: 'Developer: Horizon Living',
+        development: 'Development: Lakeside Residences',
+        bank: 'Funding Bank: First National'
       },
       pipeline: buildPipeline(basePipeline, {
         days: 31,
@@ -153,7 +264,10 @@ function buildScenarios() {
       filters: {
         property: 'Property: All',
         bedroom: 'Bedroom Mix: 1-3 BR',
-        agent: 'Agent: Leasing Team'
+        agent: 'Agent: Leasing Team',
+        developer: 'Developer: Horizon Living',
+        development: 'Development: Lakeside Residences',
+        bank: 'Funding Bank: First National'
       },
       pipeline: buildPipeline(basePipeline, {
         days: 30,
@@ -210,7 +324,10 @@ function buildScenarios() {
       filters: {
         property: 'Property: Downtown Tower',
         bedroom: 'Bedroom Mix: Studios-2 BR',
-        agent: 'Agent: Lease-Up Team'
+        agent: 'Agent: Lease-Up Team',
+        developer: 'Developer: Skyline Partners',
+        development: 'Development: Downtown Tower',
+        bank: 'Funding Bank: Metro Capital'
       },
       pipeline: buildPipeline(basePipeline, {
         days: 31,
@@ -300,6 +417,9 @@ function updateHeader(scenario) {
   document.getElementById('filterProperty').textContent = scenario.filters.property;
   document.getElementById('filterBedroom').textContent = scenario.filters.bedroom;
   document.getElementById('filterAgent').textContent = scenario.filters.agent;
+  document.getElementById('filterDeveloper').textContent = scenario.filters.developer;
+  document.getElementById('filterDevelopment').textContent = scenario.filters.development;
+  document.getElementById('filterFunding').textContent = scenario.filters.bank;
 }
 
 function updateKpis(scenario) {
@@ -366,6 +486,8 @@ function updateCharts(scenario, state) {
     createPaymentPunctualityChart('paymentPunctualityChart', scenario.paymentPunctuality)
   );
   refreshPaymentPunctualityChart(paymentChart, scenario.paymentPunctuality);
+
+  updateChartsTheme(state.charts);
 }
 
 function ensureChart(state, key, createFn) {
@@ -429,15 +551,15 @@ function formatPercent(value, decimals = 1) {
   return `${(value * 100).toFixed(decimals)}%`;
 }
 
-function applyChartDefaults() {
-  Chart.defaults.color = '#cbd5f5';
+function applyChartDefaults(themeTokens) {
+  Chart.defaults.color = themeTokens.chartText;
   Chart.defaults.font.family = 'Inter, sans-serif';
   Chart.defaults.font.size = 12;
   Chart.defaults.plugins.legend.labels.boxWidth = 12;
   Chart.defaults.plugins.legend.labels.usePointStyle = true;
-  Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(15, 23, 42, 0.9)';
+  Chart.defaults.plugins.tooltip.backgroundColor = themeTokens.tooltipBg;
   Chart.defaults.plugins.tooltip.borderWidth = 1;
-  Chart.defaults.plugins.tooltip.borderColor = 'rgba(148, 163, 208, 0.3)';
+  Chart.defaults.plugins.tooltip.borderColor = themeTokens.tooltipBorder;
 }
 
 function createDailyPipelineChart(elementId, labels, dataset) {
@@ -479,7 +601,7 @@ function createDailyPipelineChart(elementId, labels, dataset) {
         },
         y: {
           beginAtZero: true,
-          grid: { color: 'rgba(148, 163, 208, 0.15)' }
+          grid: { color: getThemeToken('chartGrid') }
         }
       }
     }
@@ -526,17 +648,15 @@ function createAttendanceChart(elementId, labels, dataset) {
     },
     options: {
       responsive: true,
-      interaction: { mode: 'index', intersect: false },
       scales: {
         x: {
           stacked: true,
-          grid: { display: false },
-          ticks: { maxRotation: 0 }
+          grid: { display: false }
         },
         y: {
-          stacked: true,
           beginAtZero: true,
-          grid: { color: 'rgba(148, 163, 208, 0.15)' }
+          stacked: true,
+          grid: { color: getThemeToken('chartGrid') }
         }
       }
     }
@@ -559,18 +679,18 @@ function createRentCollectionChart(elementId, rent) {
       labels: rent.months,
       datasets: [
         {
-          label: 'Expected',
+          label: 'Expected Rent',
           data: rent.expected,
-          backgroundColor: 'rgba(148, 163, 208, 0.5)',
-          borderRadius: 8,
-          maxBarThickness: 26
-        },
-        {
-          label: 'Actual',
-          data: rent.actual,
           backgroundColor: 'rgba(56, 189, 248, 0.8)',
           borderRadius: 8,
-          maxBarThickness: 26
+          maxBarThickness: 28
+        },
+        {
+          label: 'Actual Rent',
+          data: rent.actual,
+          backgroundColor: 'rgba(74, 222, 128, 0.8)',
+          borderRadius: 8,
+          maxBarThickness: 28
         }
       ]
     },
@@ -581,13 +701,8 @@ function createRentCollectionChart(elementId, rent) {
           grid: { display: false }
         },
         y: {
-          beginAtZero: false,
-          grid: { color: 'rgba(148, 163, 208, 0.15)' },
-          ticks: {
-            callback(value) {
-              return `$${(value / 1000).toLocaleString()}k`;
-            }
-          }
+          beginAtZero: true,
+          grid: { color: getThemeToken('chartGrid') }
         }
       }
     }
@@ -632,7 +747,7 @@ function createDefaultRateChart(elementId, defaultRate) {
         },
         y: {
           beginAtZero: true,
-          grid: { color: 'rgba(148, 163, 208, 0.15)' }
+          grid: { color: getThemeToken('chartGrid') }
         }
       }
     }
@@ -681,17 +796,17 @@ function createPaymentPunctualityChart(elementId, punctuality) {
           title: {
             display: true,
             text: 'Day of Month',
-            color: '#94a3c1'
+            color: getThemeToken('axisTitle') || getThemeToken('chartText')
           }
         },
         y: {
           beginAtZero: true,
           max: 50,
-          grid: { color: 'rgba(148, 163, 208, 0.15)' },
+          grid: { color: getThemeToken('chartGrid') },
           title: {
             display: true,
             text: '% of Monthly Rent',
-            color: '#94a3c1'
+            color: getThemeToken('axisTitle') || getThemeToken('chartText')
           }
         }
       }
