@@ -42,44 +42,42 @@ function buildTypicalPunctualityDistribution() {
   );
 }
 
-function populateScenarioOptions(selectElement, scenarios, scenarioOrder, monthKey, year, preferredKey) {
-  if (!selectElement) {
-    return preferredKey;
+function buildTimeframeKey(monthKey, year) {
+  return `${year}-${monthKey}`;
+}
+
+function buildTimeframeIndex(scenarios) {
+  return scenarios.reduce((map, scenario) => {
+    const key = buildTimeframeKey(scenario.timeframe.monthKey, scenario.timeframe.year);
+    map.set(key, scenario);
+    return map;
+  }, new Map());
+}
+
+function buildMonthsByYear(scenarios) {
+  return scenarios.reduce((map, scenario) => {
+    const { year, monthKey, monthLabel } = scenario.timeframe;
+    if (!map.has(year)) {
+      map.set(year, new Map());
+    }
+    const monthMap = map.get(year);
+    if (!monthMap.has(monthKey)) {
+      monthMap.set(monthKey, monthLabel);
+    }
+    return map;
+  }, new Map());
+}
+
+function getFirstScenarioForYear(monthsByYear, timeframeIndex, year) {
+  const monthMap = monthsByYear.get(year);
+  if (!monthMap || monthMap.size === 0) {
+    return null;
   }
-
-  const normalizedYear = Number(year);
-  const matchingKeys = scenarioOrder.filter((key) => {
-    const timeframe = scenarios[key].timeframe;
-    return timeframe.monthKey === monthKey && timeframe.year === normalizedYear;
-  });
-
-  const previousValue = selectElement.value;
-  selectElement.innerHTML = '';
-
-  const keysToRender = matchingKeys.length > 0 ? matchingKeys : scenarioOrder;
-
-  keysToRender.forEach((key) => {
-    const option = document.createElement('option');
-    option.value = key;
-    option.textContent = scenarios[key].optionLabel;
-    selectElement.appendChild(option);
-  });
-
-  let selectedKey = null;
-
-  if (preferredKey && keysToRender.includes(preferredKey)) {
-    selectedKey = preferredKey;
-  } else if (keysToRender.includes(previousValue)) {
-    selectedKey = previousValue;
-  } else if (keysToRender.length > 0) {
-    [selectedKey] = keysToRender;
+  const [firstMonth] = Array.from(monthMap.keys()).sort((a, b) => Number(a) - Number(b));
+  if (!firstMonth) {
+    return null;
   }
-
-  if (selectedKey) {
-    selectElement.value = selectedKey;
-  }
-
-  return selectedKey;
+  return timeframeIndex.get(buildTimeframeKey(firstMonth, year)) || null;
 }
 
 const THEME_STORAGE_KEY = 'leasingdash-theme';
@@ -91,35 +89,17 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeTheme(state);
 
   const scenarios = buildScenarios();
-  const scenarioKeys = Object.keys(scenarios);
-  const scenarioSelect = document.getElementById('scenarioSelect');
+  const scenarioList = Object.values(scenarios);
+  const timeframeIndex = buildTimeframeIndex(scenarioList);
+  const monthsByYear = buildMonthsByYear(scenarioList);
+
   const monthSelect = document.getElementById('monthSelect');
   const yearSelect = document.getElementById('yearSelect');
 
-  const monthOptions = Array.from(
-    scenarioKeys.reduce((map, key) => {
-      const { monthKey, monthLabel } = scenarios[key].timeframe;
-      if (!map.has(monthKey)) {
-        map.set(monthKey, monthLabel);
-      }
-      return map;
-    }, new Map())
-  ).sort((a, b) => Number(a[0]) - Number(b[0]));
-
-  const yearOptions = Array.from(
-    scenarioKeys.reduce((set, key) => set.add(scenarios[key].timeframe.year), new Set())
-  ).sort((a, b) => a - b);
-
-  if (monthSelect) {
-    monthOptions.forEach(([value, label]) => {
-      const option = document.createElement('option');
-      option.value = value;
-      option.textContent = label;
-      monthSelect.appendChild(option);
-    });
-  }
+  const yearOptions = Array.from(monthsByYear.keys()).sort((a, b) => a - b);
 
   if (yearSelect) {
+    yearSelect.innerHTML = '';
     yearOptions.forEach((year) => {
       const option = document.createElement('option');
       option.value = String(year);
@@ -128,81 +108,97 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const initialKey = scenarioKeys[0];
-  const initialScenario = scenarios[initialKey];
-
-  if (monthSelect) {
-    monthSelect.value = initialScenario.timeframe.monthKey;
-  }
-  if (yearSelect) {
-    yearSelect.value = String(initialScenario.timeframe.year);
-  }
-
-  let activeScenarioKey = populateScenarioOptions(
-    scenarioSelect,
-    scenarios,
-    scenarioKeys,
-    monthSelect?.value || initialScenario.timeframe.monthKey,
-    yearSelect ? Number(yearSelect.value) : initialScenario.timeframe.year,
-    initialKey
-  );
-
-  if (!activeScenarioKey) {
-    activeScenarioKey = initialKey;
-  }
-
-  updateScenario(scenarios[activeScenarioKey], state);
-
-  scenarioSelect.addEventListener('change', (event) => {
-    const selectedKey = event.target.value;
-    const selectedScenario = scenarios[selectedKey];
-    if (!selectedScenario) {
-      return;
+  const renderMonthOptions = (year, preferredMonth) => {
+    if (!monthSelect) {
+      return null;
     }
-    activeScenarioKey = selectedKey;
-    updateScenario(selectedScenario, state);
-    if (monthSelect) {
-      monthSelect.value = selectedScenario.timeframe.monthKey;
+    const monthMap = monthsByYear.get(year);
+    monthSelect.innerHTML = '';
+    if (!monthMap || monthMap.size === 0) {
+      return null;
     }
-    if (yearSelect) {
-      yearSelect.value = String(selectedScenario.timeframe.year);
-    }
-    activeScenarioKey = populateScenarioOptions(
-      scenarioSelect,
-      scenarios,
-      scenarioKeys,
-      selectedScenario.timeframe.monthKey,
-      selectedScenario.timeframe.year,
-      selectedKey
-    );
-  });
-
-  const handleTimeframeChange = () => {
-    if (!monthSelect || !yearSelect) {
-      return;
-    }
-    const monthKey = monthSelect.value;
-    const year = Number(yearSelect.value);
-    const nextScenarioKey = populateScenarioOptions(
-      scenarioSelect,
-      scenarios,
-      scenarioKeys,
-      monthKey,
-      year,
-      activeScenarioKey
-    );
-    if (!nextScenarioKey) {
-      return;
-    }
-    activeScenarioKey = nextScenarioKey;
-    updateScenario(scenarios[activeScenarioKey], state);
+    const entries = Array.from(monthMap.entries()).sort((a, b) => Number(a[0]) - Number(b[0]));
+    entries.forEach(([value, label]) => {
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = label;
+      monthSelect.appendChild(option);
+    });
+    const selectedMonth =
+      preferredMonth && monthMap.has(preferredMonth) ? preferredMonth : entries[0][0];
+    monthSelect.value = selectedMonth;
+    return selectedMonth;
   };
 
-  if (monthSelect) {
-    monthSelect.addEventListener('change', handleTimeframeChange);
+  const fallbackYear = yearOptions[0] ?? scenarioList[0]?.timeframe.year;
+  if (yearSelect && fallbackYear !== undefined) {
+    yearSelect.value = String(fallbackYear);
   }
+
+  const initialMonth =
+    fallbackYear !== undefined
+      ? renderMonthOptions(
+          fallbackYear,
+          scenarioList.find((scenario) => scenario.timeframe.year === fallbackYear)?.timeframe
+            .monthKey
+        )
+      : null;
+
+  let activeScenario =
+    (initialMonth !== null && fallbackYear !== undefined
+      ? timeframeIndex.get(buildTimeframeKey(initialMonth, fallbackYear))
+      : null) || scenarioList[0] || null;
+
+  const applyScenario = (scenario) => {
+    if (!scenario) {
+      return;
+    }
+    activeScenario = scenario;
+    if (monthSelect) {
+      monthSelect.value = scenario.timeframe.monthKey;
+    }
+    if (yearSelect) {
+      yearSelect.value = String(scenario.timeframe.year);
+    }
+    updateScenario(scenario, state);
+  };
+
+  applyScenario(activeScenario);
+
+  if (monthSelect) {
+    monthSelect.addEventListener('change', () => {
+      const selectedMonth = monthSelect.value;
+      const selectedYear =
+        yearSelect && yearSelect.value
+          ? Number(yearSelect.value)
+          : activeScenario?.timeframe.year;
+      if (Number.isNaN(selectedYear) || selectedYear === undefined) {
+        return;
+      }
+      let scenario = timeframeIndex.get(buildTimeframeKey(selectedMonth, selectedYear));
+      if (!scenario) {
+        scenario =
+          getFirstScenarioForYear(monthsByYear, timeframeIndex, selectedYear) || scenarioList[0] || null;
+      }
+      applyScenario(scenario);
+    });
+  }
+
   if (yearSelect) {
-    yearSelect.addEventListener('change', handleTimeframeChange);
+    yearSelect.addEventListener('change', () => {
+      const year = Number(yearSelect.value);
+      const preferredMonth =
+        activeScenario && activeScenario.timeframe.year === year
+          ? activeScenario.timeframe.monthKey
+          : null;
+      const monthKey = renderMonthOptions(year, preferredMonth) || preferredMonth;
+      let scenario =
+        (monthKey ? timeframeIndex.get(buildTimeframeKey(monthKey, year)) : null) ||
+        getFirstScenarioForYear(monthsByYear, timeframeIndex, year) ||
+        scenarioList[0] ||
+        null;
+      applyScenario(scenario);
+    });
   }
 });
 
@@ -496,13 +492,13 @@ function buildScenarios() {
         ]
       }
     },
-    'urban-aug-2024': {
-      optionLabel: 'Urban Lease-Up · Aug 2024',
+    'urban-oct-2024': {
+      optionLabel: 'Urban Lease-Up · Oct 2024',
       title: 'Urban Lease-Up Dashboard',
-      subtitle: 'August 2024 • Portfolio Size: 95 units',
+      subtitle: 'October 2024 • Portfolio Size: 95 units',
       timeframe: {
-        monthKey: '08',
-        monthLabel: 'August',
+        monthKey: '10',
+        monthLabel: 'October',
         year: 2024
       },
       pipeline: buildPipeline(basePipeline, {
@@ -525,16 +521,16 @@ function buildScenarios() {
         unpaid: [20, 19, 17, 16, 15, 14, 13, 12, 11, 11, 10, 9]
       },
       paymentPunctuality: {
-        label: 'August 2024 rent run',
+        label: 'October 2024 rent run',
         days: [...monthDayLabels],
         values: [...typicalPunctualityDistribution],
         dueWindowDays: 5
       },
       supply: {
         vacancyRate: 0.168,
-        vacancyDetail: '16 units available by August 5th',
+        vacancyDetail: '16 units available by October 5th',
         incomingRate: 0.105,
-        incomingDetail: '10 new units releasing in August',
+        incomingDetail: '10 new units releasing in October',
         vacancyTrend: {
           months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
           rates: [0.142, 0.148, 0.153, 0.158, 0.162, 0.166, 0.169, 0.168, 0.16, 0.152, 0.145, 0.14]
@@ -548,9 +544,9 @@ function buildScenarios() {
         avgDaysLate: 3.6,
         avgLeaseDuration: 15.4
       },
-      insights: {
-        highlights: [
-          'Lease-up traffic surges mid-month with multiple 12+ application days.',
+        insights: {
+          highlights: [
+          'Lease-up traffic surges mid-month with multiple 12+ application days in October.',
           'Two-bedroom premiums holding rents 3% above underwriting.',
           'Collections improving as autopay adoption tops 58%.'
         ],
