@@ -1,64 +1,81 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Leasing Dashboard</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
-    <header class="app-header">
-      <h1>Leasing Dashboard</h1>
-      <button id="lightModeToggle" aria-pressed="false" class="toggle-button">
-        <span class="toggle-button__icon" aria-hidden="true">🌙</span>
-        <span class="toggle-button__label">Enable Light Mode</span>
-      </button>
-    </header>
+  <body class="theme-dark">
+    <div class="dashboard">
+      <header class="dashboard__header">
+        <div class="dashboard__titles">
+          <h1 class="dashboard__title">Leasing Dashboard</h1>
+          <p class="dashboard__subtitle">Portfolio overview of active lease developments</p>
+        </div>
+        <button
+          id="themeToggle"
+          class="theme-toggle"
+          type="button"
+          aria-pressed="false"
+        >
+          <span class="theme-toggle__icon" aria-hidden="true">🌙</span>
+          <span class="theme-toggle__label">Enable light mode</span>
+        </button>
+      </header>
 
-    <section class="filters" aria-label="Project filters">
-      <div class="filter">
-        <label for="developerFilter">Developer</label>
-        <select id="developerFilter">
-          <option value="all">All Developers</option>
-        </select>
-      </div>
-      <div class="filter">
-        <label for="developmentFilter">Development</label>
-        <select id="developmentFilter">
-          <option value="all">All Developments</option>
-        </select>
-      </div>
-      <div class="filter">
-        <label for="fundingBankFilter">Funding Bank</label>
-        <select id="fundingBankFilter">
-          <option value="all">All Funding Banks</option>
-        </select>
-      </div>
-    </section>
+      <section class="dashboard__toolbar" aria-label="Project filters">
+        <div class="filter">
+          <label for="developerFilter">Developer</label>
+          <select id="developerFilter" data-filter="developer">
+            <option value="all">All developers</option>
+          </select>
+        </div>
+        <div class="filter">
+          <label for="developmentFilter">Development</label>
+          <select id="developmentFilter" data-filter="development">
+            <option value="all">All developments</option>
+          </select>
+        </div>
+        <div class="filter">
+          <label for="fundingFilter">Funding bank</label>
+          <select id="fundingFilter" data-filter="fundingBank">
+            <option value="all">All funding banks</option>
+          </select>
+        </div>
+      </section>
 
-    <main>
-      <table class="projects" aria-describedby="projectsSummary">
-        <caption id="projectsSummary">Current lease projects</caption>
-        <thead>
-          <tr>
-            <th scope="col">Developer</th>
-            <th scope="col">Development</th>
-            <th scope="col">Funding Bank</th>
-            <th scope="col">Units</th>
-            <th scope="col">Status</th>
-          </tr>
-        </thead>
-        <tbody id="projectsTableBody"></tbody>
-      </table>
-    </main>
+      <main class="dashboard__content">
+        <div class="table-card">
+          <div class="table-card__header">
+            <h2 class="table-card__title">Projects</h2>
+            <p id="projectsCount" class="table-card__meta"></p>
+          </div>
+          <table aria-describedby="projectsCount">
+            <thead>
+              <tr>
+                <th scope="col">Developer</th>
+                <th scope="col">Development</th>
+                <th scope="col">Funding bank</th>
+                <th scope="col" class="numeric">Units</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody id="projectsBody"></tbody>
+          </table>
+        </div>
+      </main>
+    </div>
 
-    <template id="projectRowTemplate">
+    <template id="projectRow">
       <tr>
         <td data-field="developer"></td>
         <td data-field="development"></td>
         <td data-field="fundingBank"></td>
-        <td data-field="units"></td>
-        <td data-field="status"></td>
+        <td class="numeric" data-field="units"></td>
+        <td>
+          <span class="status-pill" data-field="status"></span>
+        </td>
       </tr>
     </template>
 

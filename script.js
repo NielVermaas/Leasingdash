@@ -1,182 +1,164 @@
 const projects = [
   {
-    developer: "Urban Axis",
-    development: "Riverside Lofts",
-    fundingBank: "First Metropolitan Bank",
-    units: 128,
+    developer: "Northwind Partners",
+    development: "Marina Point",
+    fundingBank: "First Horizon",
+    units: 168,
     status: "In Progress",
   },
   {
-    developer: "Harbor & Co.",
-    development: "Seaport Residences",
-    fundingBank: "Continental Capital",
-    units: 242,
-    status: "Completed",
-  },
-  {
-    developer: "Urban Axis",
-    development: "The Atrium",
-    fundingBank: "First Metropolitan Bank",
-    units: 96,
-    status: "On Hold",
-  },
-  {
-    developer: "Vertex Partners",
-    development: "Summit Heights",
-    fundingBank: "Great Plains Financial",
-    units: 180,
+    developer: "Northwind Partners",
+    development: "Canopy Heights",
+    fundingBank: "Blue Ridge Capital",
+    units: 132,
     status: "In Progress",
   },
   {
-    developer: "Skyline Ventures",
-    development: "Skyview Tower",
-    fundingBank: "Continental Capital",
+    developer: "Ridgeview Group",
+    development: "Riverfront Commons",
+    fundingBank: "First Horizon",
     units: 210,
     status: "Completed",
   },
   {
-    developer: "Harbor & Co.",
-    development: "Marina Quarters",
-    fundingBank: "Lighthouse Trust",
-    units: 154,
+    developer: "Ridgeview Group",
+    development: "Stonegate Square",
+    fundingBank: "Heritage Bank",
+    units: 184,
+    status: "Delayed",
+  },
+  {
+    developer: "Harborline",
+    development: "Tidewater Lofts",
+    fundingBank: "Blue Ridge Capital",
+    units: 94,
     status: "In Progress",
   },
   {
-    developer: "Vertex Partners",
-    development: "Cedar Grove",
-    fundingBank: "Lighthouse Trust",
-    units: 86,
+    developer: "Harborline",
+    development: "Beacon Residences",
+    fundingBank: "Commonwealth Credit",
+    units: 126,
     status: "Completed",
   },
   {
-    developer: "Skyline Ventures",
-    development: "Northwind Commons",
-    fundingBank: "Great Plains Financial",
-    units: 132,
-    status: "On Hold",
+    developer: "Summit Estates",
+    development: "Vista Canyon",
+    fundingBank: "Heritage Bank",
+    units: 155,
+    status: "Completed",
+  },
+  {
+    developer: "Summit Estates",
+    development: "Arbor Terrace",
+    fundingBank: "Commonwealth Credit",
+    units: 142,
+    status: "In Progress",
   },
 ];
 
-const root = document.documentElement;
-const lightModeToggle = document.getElementById("lightModeToggle");
-const tableBody = document.getElementById("projectsTableBody");
-const developerFilter = document.getElementById("developerFilter");
-const developmentFilter = document.getElementById("developmentFilter");
-const fundingBankFilter = document.getElementById("fundingBankFilter");
-const projectRowTemplate = document.getElementById("projectRowTemplate");
+const body = document.body;
+const themeToggle = document.querySelector("#themeToggle");
+const tableBody = document.querySelector("#projectsBody");
+const projectTemplate = document.querySelector("#projectRow");
+const projectsCount = document.querySelector("#projectsCount");
 
-const statusClassMap = {
-  "In Progress": "status-pill status-pill--in-progress",
-  Completed: "status-pill status-pill--completed",
-  "On Hold": "status-pill status-pill--on-hold",
+const filters = {
+  developer: document.querySelector("#developerFilter"),
+  development: document.querySelector("#developmentFilter"),
+  fundingBank: document.querySelector("#fundingFilter"),
 };
 
-const formatStatus = (status) => {
-  const pill = document.createElement("span");
-  pill.textContent = status;
-  pill.className = statusClassMap[status] ?? "status-pill";
-  return pill;
-};
+function setInitialTheme() {
+  const stored = window.localStorage.getItem("leasingdash-theme");
+  const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+  if (stored === "light" || (!stored && prefersLight)) {
+    body.classList.replace("theme-dark", "theme-light");
+    themeToggle.setAttribute("aria-pressed", "true");
+    themeToggle.querySelector(".theme-toggle__icon").textContent = "☀️";
+    themeToggle.querySelector(".theme-toggle__label").textContent = "Disable light mode";
+  }
+}
 
-const populateFilter = (selectEl, values) => {
-  const fragment = document.createDocumentFragment();
-  [...values]
-    .sort((a, b) => a.localeCompare(b))
-    .forEach((value) => {
+function toggleTheme() {
+  const isLight = body.classList.toggle("theme-light");
+  if (isLight) {
+    body.classList.remove("theme-dark");
+  } else {
+    body.classList.add("theme-dark");
+  }
+
+  themeToggle.setAttribute("aria-pressed", String(isLight));
+  themeToggle.querySelector(".theme-toggle__icon").textContent = isLight ? "☀️" : "🌙";
+  themeToggle.querySelector(".theme-toggle__label").textContent = isLight
+    ? "Disable light mode"
+    : "Enable light mode";
+
+  window.localStorage.setItem("leasingdash-theme", isLight ? "light" : "dark");
+}
+
+function uniqueValuesFor(field) {
+  return Array.from(new Set(projects.map((project) => project[field]))).sort();
+}
+
+function populateFilters() {
+  Object.entries(filters).forEach(([field, select]) => {
+    const values = uniqueValuesFor(field);
+    values.forEach((value) => {
       const option = document.createElement("option");
       option.value = value;
       option.textContent = value;
-      fragment.appendChild(option);
+      select.append(option);
     });
-  selectEl.appendChild(fragment);
-};
+  });
+}
 
-const uniqueValues = (key) => new Set(projects.map((project) => project[key]));
-
-populateFilter(developerFilter, uniqueValues("developer"));
-populateFilter(developmentFilter, uniqueValues("development"));
-populateFilter(fundingBankFilter, uniqueValues("fundingBank"));
-
-const projectMatchesFilters = (project) => {
-  const developerMatches =
-    developerFilter.value === "all" || project.developer === developerFilter.value;
-  const developmentMatches =
-    developmentFilter.value === "all" || project.development === developmentFilter.value;
-  const fundingBankMatches =
-    fundingBankFilter.value === "all" || project.fundingBank === fundingBankFilter.value;
-
-  return developerMatches && developmentMatches && fundingBankMatches;
-};
-
-const renderProjects = () => {
-  const matchingProjects = projects.filter(projectMatchesFilters);
-  tableBody.replaceChildren();
-
-  if (matchingProjects.length === 0) {
-    const emptyRow = document.createElement("tr");
-    const emptyCell = document.createElement("td");
-    emptyCell.colSpan = 5;
-    emptyCell.className = "empty-state";
-    emptyCell.textContent = "No projects match the selected filters.";
-    emptyRow.appendChild(emptyCell);
-    tableBody.appendChild(emptyRow);
-    return;
-  }
-
-  matchingProjects.forEach((project) => {
-    const row = projectRowTemplate.content.firstElementChild.cloneNode(true);
+function renderProjects(items) {
+  const fragment = document.createDocumentFragment();
+  items.forEach((project) => {
+    const row = projectTemplate.content.cloneNode(true);
     row.querySelector('[data-field="developer"]').textContent = project.developer;
     row.querySelector('[data-field="development"]').textContent = project.development;
     row.querySelector('[data-field="fundingBank"]').textContent = project.fundingBank;
     row.querySelector('[data-field="units"]').textContent = project.units.toLocaleString();
-
-    const statusCell = row.querySelector('[data-field="status"]');
-    statusCell.textContent = "";
-    statusCell.appendChild(formatStatus(project.status));
-
-    tableBody.appendChild(row);
+    const statusElement = row.querySelector('[data-field="status"]');
+    statusElement.textContent = project.status;
+    statusElement.dataset.status = project.status.toLowerCase();
+    fragment.append(row);
   });
-};
 
-renderProjects();
+  tableBody.replaceChildren(fragment);
+  projectsCount.textContent = `${items.length} project${items.length === 1 ? "" : "s"} shown`;
+}
 
-const filterControls = [developerFilter, developmentFilter, fundingBankFilter];
-filterControls.forEach((control) => control.addEventListener("change", renderProjects));
+function collectFilters() {
+  return Object.fromEntries(
+    Object.entries(filters).map(([field, select]) => [field, select.value])
+  );
+}
 
-const prefersLightMode = window.matchMedia("(prefers-color-scheme: light)");
-const updateThemeFromPreference = () => {
-  if (prefersLightMode.matches) {
-    root.dataset.theme = "light";
-    lightModeToggle.setAttribute("aria-pressed", "true");
-    lightModeToggle.querySelector(".toggle-button__icon").textContent = "☀️";
-    lightModeToggle.querySelector(".toggle-button__label").textContent = "Disable Light Mode";
-  }
-};
+function applyFilters() {
+  const active = collectFilters();
+  const filtered = projects.filter((project) => {
+    return Object.entries(active).every(([field, value]) => {
+      if (value === "all") return true;
+      return project[field] === value;
+    });
+  });
 
-updateThemeFromPreference();
+  renderProjects(filtered);
+}
 
-const updateToggleLabel = (theme) => {
-  const isLight = theme === "light";
-  lightModeToggle.setAttribute("aria-pressed", String(isLight));
-  lightModeToggle.querySelector(".toggle-button__icon").textContent = isLight ? "☀️" : "🌙";
-  lightModeToggle
-    .querySelector(".toggle-button__label")
-    .textContent = isLight ? "Disable Light Mode" : "Enable Light Mode";
-};
+function wireFilterEvents() {
+  Object.values(filters).forEach((select) => {
+    select.addEventListener("change", applyFilters);
+  });
+}
 
-const toggleTheme = () => {
-  const isLight = root.dataset.theme === "light";
-  root.dataset.theme = isLight ? "dark" : "light";
-  updateToggleLabel(root.dataset.theme);
-};
-
-lightModeToggle.addEventListener("click", () => {
-  toggleTheme();
+document.addEventListener("DOMContentLoaded", () => {
+  setInitialTheme();
+  populateFilters();
+  wireFilterEvents();
+  renderProjects(projects);
+  themeToggle.addEventListener("click", toggleTheme);
 });
-
-prefersLightMode.addEventListener("change", (event) => {
-  root.dataset.theme = event.matches ? "light" : "dark";
-  updateToggleLabel(root.dataset.theme);
-});
-
-updateToggleLabel(root.dataset.theme ?? "dark");
