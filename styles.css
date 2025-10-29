@@ -372,7 +372,15 @@ body.print-mode .panel__grid {
 }
 
 body.print-mode .panel__grid--split {
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body.print-mode .panel__grid--split .panel__item--wide {
+  grid-column: 1 / -1;
+}
+
+body.print-mode .panel__grid--split > .panel__item:not(.panel__item--wide) canvas {
+  max-height: 280px !important;
 }
 
 body.print-mode .panel__item {
