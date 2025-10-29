@@ -45,6 +45,6 @@ No build step is required—the dashboard is a static page.
 - Placement pipeline metrics (applications, viewings, placements, no-shows) for each day in the selected scenario.
 - Portfolio supply KPIs (vacancy, incoming units, conversion rates) recalculated automatically for each version.
 - Annual supply trend visuals showing vacancy rate by month and how many buildings come online each month for the active scenario.
-- Tenant performance trends with full-year monthly coverage for rent collection and default rates, plus payment punctuality detail across all 31 days for each scenario.
+- Tenant performance trends with full-year monthly coverage for rent collection and default rates, plus payment punctuality detail across all 31 days that concentrates most payments between the 25th and month-end with a small late spillover.
 - Summary insights that explain the drivers and focus areas for the active view.
 - Scenario-specific insights that surface highlights and focus areas unique to each view.
