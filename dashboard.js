@@ -19,16 +19,22 @@ const typicalPunctualityDistribution = buildTypicalPunctualityDistribution();
 
 function buildTypicalPunctualityDistribution() {
   const tableDistribution = [
-    { count: 1, value: 28 }, // Day 1
-    { count: 1, value: 20 }, // Day 2
-    { count: 1, value: 10 }, // Day 3
-    { count: 1, value: 6 },  // Day 4
-    { count: 1, value: 5 },  // Day 5
-    { count: 5, value: 2 },  // Days 6–10
-    { count: 5, value: 1.5 }, // Days 11–15
-    { count: 5, value: 1 },   // Days 16–20
-    { count: 5, value: 0.8 }, // Days 21–25
-    { count: 6, value: 0.9 }  // Days 26–30/31
+    { count: 1, value: 18 },   // Day 1
+    { count: 1, value: 12 },   // Day 2
+    { count: 1, value: 6 },    // Day 3
+    { count: 1, value: 4 },    // Day 4
+    { count: 1, value: 3 },    // Day 5
+    { count: 5, value: 1.5 },  // Days 6–10
+    { count: 5, value: 1.2 },  // Days 11–15
+    { count: 5, value: 1.1 },  // Days 16–20
+    { count: 4, value: 1.5 },  // Days 21–24
+    { count: 1, value: 6 },    // Day 25
+    { count: 1, value: 6 },    // Day 26
+    { count: 1, value: 6 },    // Day 27
+    { count: 1, value: 4 },    // Day 28
+    { count: 1, value: 3 },    // Day 29
+    { count: 1, value: 3 },    // Day 30
+    { count: 1, value: 1 }     // Day 31
   ];
 
   return tableDistribution.flatMap(({ count, value }) =>
