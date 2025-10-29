@@ -149,14 +149,6 @@ function buildScenarios() {
       optionLabel: 'Core Portfolio · Aug 2024',
       title: 'Residential Portfolio Dashboard',
       subtitle: 'August 2024 • Portfolio Size: 120 units',
-      filters: {
-        property: 'Property: All',
-        bedroom: 'Bedroom Mix: 1-3 BR',
-        agent: 'Agent: Leasing Team',
-        developer: 'Developer: Horizon Living',
-        development: 'Development: Lakeside Residences',
-        bank: 'Funding Bank: First National'
-      },
       pipeline: buildPipeline(basePipeline, { days: 31 }),
       rent: {
         months: ['April', 'May', 'June', 'July', 'August', 'September'],
@@ -201,14 +193,6 @@ function buildScenarios() {
       optionLabel: 'Core Portfolio · Jul 2024',
       title: 'Residential Portfolio Dashboard',
       subtitle: 'July 2024 • Portfolio Size: 120 units',
-      filters: {
-        property: 'Property: All',
-        bedroom: 'Bedroom Mix: 1-3 BR',
-        agent: 'Agent: Leasing Team',
-        developer: 'Developer: Horizon Living',
-        development: 'Development: Lakeside Residences',
-        bank: 'Funding Bank: First National'
-      },
       pipeline: buildPipeline(basePipeline, {
         days: 31,
         adjustments: {
@@ -261,14 +245,6 @@ function buildScenarios() {
       optionLabel: 'Core Portfolio · Sep 2024',
       title: 'Residential Portfolio Dashboard',
       subtitle: 'September 2024 • Portfolio Size: 120 units (projected)',
-      filters: {
-        property: 'Property: All',
-        bedroom: 'Bedroom Mix: 1-3 BR',
-        agent: 'Agent: Leasing Team',
-        developer: 'Developer: Horizon Living',
-        development: 'Development: Lakeside Residences',
-        bank: 'Funding Bank: First National'
-      },
       pipeline: buildPipeline(basePipeline, {
         days: 30,
         adjustments: {
@@ -321,14 +297,6 @@ function buildScenarios() {
       optionLabel: 'Urban Lease-Up · Aug 2024',
       title: 'Urban Lease-Up Dashboard',
       subtitle: 'August 2024 • Portfolio Size: 95 units',
-      filters: {
-        property: 'Property: Downtown Tower',
-        bedroom: 'Bedroom Mix: Studios-2 BR',
-        agent: 'Agent: Lease-Up Team',
-        developer: 'Developer: Skyline Partners',
-        development: 'Development: Downtown Tower',
-        bank: 'Funding Bank: Metro Capital'
-      },
       pipeline: buildPipeline(basePipeline, {
         days: 31,
         adjustments: {
@@ -414,12 +382,6 @@ function updateScenario(scenario, state) {
 function updateHeader(scenario) {
   document.getElementById('dashboardTitle').textContent = scenario.title;
   document.getElementById('portfolioSubtitle').textContent = scenario.subtitle;
-  document.getElementById('filterProperty').textContent = scenario.filters.property;
-  document.getElementById('filterBedroom').textContent = scenario.filters.bedroom;
-  document.getElementById('filterAgent').textContent = scenario.filters.agent;
-  document.getElementById('filterDeveloper').textContent = scenario.filters.developer;
-  document.getElementById('filterDevelopment').textContent = scenario.filters.development;
-  document.getElementById('filterFunding').textContent = scenario.filters.bank;
 }
 
 function updateKpis(scenario) {

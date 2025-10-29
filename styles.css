@@ -5,7 +5,6 @@
   --surface: #111c33;
   --surface-alt: #15203b;
   --surface-contrast: rgba(15, 23, 42, 0.45);
-  --filter-bg: #111c33;
   --accent: #38bdf8;
   --accent-soft: rgba(56, 189, 248, 0.15);
   --text-primary: #f8fafc;
@@ -31,7 +30,6 @@ body.theme-light {
   --surface: #ffffff;
   --surface-alt: #eff6ff;
   --surface-contrast: rgba(255, 255, 255, 0.9);
-  --filter-bg: rgba(255, 255, 255, 0.92);
   --text-primary: #0f172a;
   --text-muted: #475569;
   --border: rgba(148, 163, 208, 0.35);
@@ -93,23 +91,6 @@ body {
   flex-direction: column;
   align-items: flex-end;
   gap: 1rem;
-}
-
-.header__filters {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.filter {
-  padding: 0.5rem 0.9rem;
-  border-radius: 999px;
-  background: var(--filter-bg);
-  border: 1px solid var(--border);
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  transition: background 0.3s ease, color 0.3s ease, border 0.3s ease;
 }
 
 .header__actions {
