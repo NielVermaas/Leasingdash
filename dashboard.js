@@ -384,18 +384,6 @@ function buildScenarios() {
       discipline: {
         avgDaysLate: 2.4,
         avgLeaseDuration: 23.5
-      },
-      insights: {
-        highlights: [
-          'August 7th produced the highest lead volume (8 applications) with 2 placements.',
-          'Attendance dips on weekends drive a 20.3% no-show rate.',
-          'July rent run lagging at 96.7% collection prompts follow-up calls.'
-        ],
-        focus: [
-          'Prioritize turn on 14 vacant units to cut vacancy by 2 pts.',
-          'Leverage autopay campaign to reduce average late days below 2.',
-          'Monitor 9 incoming units for pre-leasing opportunities.'
-        ]
       }
     },
     'core-jul-2024': {
@@ -449,18 +437,6 @@ function buildScenarios() {
       discipline: {
         avgDaysLate: 3.1,
         avgLeaseDuration: 22.8
-      },
-      insights: {
-        highlights: [
-          'Late-July heatwave saw showings slow with a 24% no-show rate.',
-          'Lead-to-placement conversion eased to 23% amid seasonal churn.',
-          'Collections stabilized above 97% through early summer months.'
-        ],
-        focus: [
-          'Tighten screening follow-up to recapture weekend no-shows.',
-          'Accelerate make-ready schedule for 16 vacant units.',
-          'Promote online payment adoption ahead of August renewals.'
-        ]
       }
     },
     'core-sep-2024': {
@@ -514,18 +490,6 @@ function buildScenarios() {
       discipline: {
         avgDaysLate: 2.1,
         avgLeaseDuration: 24.2
-      },
-      insights: {
-        highlights: [
-          'Pipeline volume improving with 4% more applications than August.',
-          'Projected no-show rate drops to 16% after reminder campaigns.',
-          'October collection outlook trending above 98% by the 5th.'
-        ],
-        focus: [
-          'Lock renewals early to hold vacancy below 10%.',
-          'Sustain text reminders to protect reduced no-show rate.',
-          'Pre-lease 10 upcoming turnovers to maintain rent momentum.'
-        ]
       }
     },
     'urban-oct-2024': {
@@ -579,18 +543,6 @@ function buildScenarios() {
       discipline: {
         avgDaysLate: 3.6,
         avgLeaseDuration: 15.4
-      },
-        insights: {
-          highlights: [
-          'Lease-up traffic surges mid-month with multiple 12+ application days in October.',
-          'Two-bedroom premiums holding rents 3% above underwriting.',
-          'Collections improving as autopay adoption tops 58%.'
-        ],
-        focus: [
-          'Staff additional tour blocks for high-demand weekends.',
-          'Target corporate housing leads to accelerate velocity.',
-          'Extend concierge follow-up to curb 17% vacancy early in lease-up.'
-        ]
       }
     }
   };
@@ -624,7 +576,6 @@ function updateScenario(scenario, state) {
   updateHeader(scenario);
   updateKpis(scenario);
   updateCharts(scenario, state);
-  updateInsights(scenario);
 }
 
 function updateHeader(scenario) {
@@ -696,24 +647,6 @@ function updateCharts(scenario, state) {
   refreshNewInventoryChart(newInventoryChart, scenario.supply.newInventory);
 
   updateChartsTheme(state.charts);
-}
-
-function updateInsights(scenario) {
-  populateList('highlightsList', scenario?.insights?.highlights || []);
-  populateList('focusList', scenario?.insights?.focus || []);
-}
-
-function populateList(elementId, items) {
-  const list = document.getElementById(elementId);
-  if (!list) {
-    return;
-  }
-  list.innerHTML = '';
-  items.forEach((item) => {
-    const li = document.createElement('li');
-    li.textContent = item;
-    list.appendChild(li);
-  });
 }
 
 function ensureChart(state, key, createFn) {
