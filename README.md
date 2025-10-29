@@ -35,7 +35,7 @@ If your remote repository is empty, push the latest dashboard commit:
    - **August 2024 – Core Portfolio**: the stabilized portfolio baseline.
    - **September 2024 – Core Portfolio**: forward-looking projections with improved conversions.
    - **October 2024 – Urban Lease-Up**: a downtown asset in lease-up with heavier traffic.
-4. Review the KPI cards—vacancy snapshot, incoming supply, and payment discipline—alongside the placement, tenant, and supply charts to understand how the selected timeframe is performing.
+4. Review the KPI cards—vacancy snapshot, incoming supply, payment discipline, and average lease duration—alongside the placement, tenant, and supply charts to understand how the selected timeframe is performing.
 
 No build step is required—the dashboard is a static page.
 
@@ -49,5 +49,6 @@ No build step is required—the dashboard is a static page.
 
 - Placement pipeline metrics (applications, viewings, placements, no-shows) for each day in the selected timeframe.
 - Portfolio supply KPIs (vacancy, incoming units, conversion rates) recalculated automatically for each version.
+- Average lease duration indicator highlights how long current residents remain in place for the active timeframe.
 - Annual supply trend visuals showing vacancy rate by month and how many buildings come online each month for the active timeframe.
 - Tenant performance trends with full-year monthly coverage for rent collection and default rates, plus payment punctuality detail across all 31 days that mirrors typical residential patterns (18% paid on the 1st, 12% on the 2nd, tapering through month-end).

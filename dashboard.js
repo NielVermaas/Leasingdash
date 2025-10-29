@@ -383,7 +383,8 @@ function buildScenarios() {
       },
       discipline: {
         avgDaysLate: 2.4,
-        avgLeaseDuration: 23.5
+        avgLeaseDuration: 23.5,
+        leaseDetail: 'Current residents across 120-unit core portfolio'
       }
     },
     'core-jul-2024': {
@@ -436,7 +437,8 @@ function buildScenarios() {
       },
       discipline: {
         avgDaysLate: 3.1,
-        avgLeaseDuration: 22.8
+        avgLeaseDuration: 22.8,
+        leaseDetail: 'Weighted across the 120-unit core portfolio'
       }
     },
     'core-sep-2024': {
@@ -489,7 +491,8 @@ function buildScenarios() {
       },
       discipline: {
         avgDaysLate: 2.1,
-        avgLeaseDuration: 24.2
+        avgLeaseDuration: 24.2,
+        leaseDetail: 'Projected resident average for the 120-unit core portfolio'
       }
     },
     'urban-oct-2024': {
@@ -542,7 +545,8 @@ function buildScenarios() {
       },
       discipline: {
         avgDaysLate: 3.6,
-        avgLeaseDuration: 15.4
+        avgLeaseDuration: 15.4,
+        leaseDetail: 'Current leases within the 95-unit urban asset'
       }
     }
   };
@@ -592,7 +596,10 @@ function updateKpis(scenario) {
   document.getElementById('incomingSupply').textContent = formatPercent(scenario.supply.incomingRate);
   document.getElementById('incomingDetail').textContent = scenario.supply.incomingDetail;
   document.getElementById('paymentDiscipline').textContent = `Avg. ${scenario.discipline.avgDaysLate.toFixed(1)} days late`;
-  document.getElementById('leaseDuration').textContent = `Average lease duration: ${scenario.discipline.avgLeaseDuration.toFixed(1)} months`;
+  document.getElementById('paymentDetail').textContent = `Rent run: ${scenario.paymentPunctuality.label}`;
+  document.getElementById('averageLeaseDuration').textContent = `${scenario.discipline.avgLeaseDuration.toFixed(1)} months`;
+  document.getElementById('averageLeaseDetail').textContent =
+    scenario.discipline.leaseDetail || 'Across current residents';
 
   document.getElementById('totalApplications').textContent = totals.applications.toString();
   document.getElementById('totalViewings').textContent = totals.viewings.toString();
