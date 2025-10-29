@@ -673,7 +673,6 @@ function getBaseValue(array, idx) {
 function updateScenario(scenario, state) {
   updateHeader(scenario);
   updateKpis(scenario);
-  updateInsights(scenario.insights);
   updateCharts(scenario, state);
 }
 
@@ -699,11 +698,6 @@ function updateKpis(scenario) {
   document.getElementById('totalNoShowRate').textContent = formatPercent(noShowRate);
   document.getElementById('leadToPlacement').textContent = formatPercent(totals.placementRatio);
   document.getElementById('viewingToPlacement').textContent = formatPercent(totals.placementRatioFromViewings);
-}
-
-function updateInsights(insights) {
-  populateList('insightHighlights', insights.highlights);
-  populateList('insightFocus', insights.focus);
 }
 
 function updateCharts(scenario, state) {
@@ -798,16 +792,6 @@ function computeNoShowRate(pipeline) {
   );
   const scheduled = totals.viewings + totals.noShows;
   return scheduled ? totals.noShows / scheduled : 0;
-}
-
-function populateList(elementId, items) {
-  const listElement = document.getElementById(elementId);
-  listElement.innerHTML = '';
-  items.forEach((item) => {
-    const li = document.createElement('li');
-    li.textContent = item;
-    listElement.appendChild(li);
-  });
 }
 
 function formatPercent(value, decimals = 1) {

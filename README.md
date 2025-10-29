@@ -51,5 +51,3 @@ No build step is required—the dashboard is a static page.
 - Portfolio supply KPIs (vacancy, incoming units, conversion rates) recalculated automatically for each version.
 - Annual supply trend visuals showing vacancy rate by month and how many buildings come online each month for the active timeframe.
 - Tenant performance trends with full-year monthly coverage for rent collection and default rates, plus payment punctuality detail across all 31 days that mirrors typical residential patterns (18% paid on the 1st, 12% on the 2nd, tapering through month-end).
-- Summary insights that explain the drivers and focus areas for the active view.
-- Timeframe-specific insights that surface highlights and focus areas unique to each view.

@@ -332,35 +332,6 @@ body.theme-dark .select-control select {
   font-weight: 600;
 }
 
-.insights {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
-}
-
-.insight {
-  background: var(--surface);
-  border-radius: 1rem;
-  padding: 1.3rem;
-  border: 1px solid var(--border);
-  box-shadow: var(--card-shadow);
-  transition: background 0.3s ease, color 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
-}
-
-.insight h3 {
-  margin: 0 0 0.8rem;
-  font-size: 1rem;
-}
-
-.insight ul {
-  margin: 0;
-  padding-left: 1.1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  color: var(--text-muted);
-}
-
 canvas {
   width: 100% !important;
 }
@@ -368,8 +339,7 @@ canvas {
 body.print-mode .page,
 body.print-mode .kpi-card,
 body.print-mode .panel,
-body.print-mode .panel__item,
-body.print-mode .insight {
+body.print-mode .panel__item {
   background: #ffffff !important;
   color: #022015 !important;
   box-shadow: none !important;
@@ -378,8 +348,7 @@ body.print-mode .insight {
 body.print-mode .page__subtitle,
 body.print-mode .kpi-card h2,
 body.print-mode .kpi-card__meta,
-body.print-mode .panel__item-header p,
-body.print-mode .insight ul {
+body.print-mode .panel__item-header p {
   color: #3f6b57 !important;
 }
 
@@ -449,15 +418,13 @@ body.print-mode .theme-toggle {
   }
 
   .kpi-strip,
-  .panel__grid,
-  .insights {
+  .panel__grid {
     gap: 1rem;
   }
 
   .panel,
   .panel__item,
-  .kpi-card,
-  .insight {
+  .kpi-card {
     break-inside: avoid;
     page-break-inside: avoid;
   }
