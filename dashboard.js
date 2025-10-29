@@ -606,6 +606,7 @@ function updateScenario(scenario, state) {
   updateHeader(scenario);
   updateKpis(scenario);
   updateCharts(scenario, state);
+  updateInsights(scenario);
 }
 
 function updateHeader(scenario) {
@@ -677,6 +678,24 @@ function updateCharts(scenario, state) {
   refreshNewInventoryChart(newInventoryChart, scenario.supply.newInventory);
 
   updateChartsTheme(state.charts);
+}
+
+function updateInsights(scenario) {
+  populateList('highlightsList', scenario?.insights?.highlights || []);
+  populateList('focusList', scenario?.insights?.focus || []);
+}
+
+function populateList(elementId, items) {
+  const list = document.getElementById(elementId);
+  if (!list) {
+    return;
+  }
+  list.innerHTML = '';
+  items.forEach((item) => {
+    const li = document.createElement('li');
+    li.textContent = item;
+    list.appendChild(li);
+  });
 }
 
 function ensureChart(state, key, createFn) {
