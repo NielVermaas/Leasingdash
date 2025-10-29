@@ -170,7 +170,15 @@ function buildScenarios() {
         vacancyRate: 0.117,
         vacancyDetail: '14 units available by August 5th',
         incomingRate: 0.075,
-        incomingDetail: '9 new units becoming available in August'
+        incomingDetail: '9 new units becoming available in August',
+        vacancyTrend: {
+          months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          rates: [0.094, 0.096, 0.098, 0.101, 0.108, 0.112, 0.118, 0.117, 0.109, 0.103, 0.098, 0.095]
+        },
+        newInventory: {
+          months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          buildings: [1, 0, 1, 1, 2, 1, 1, 2, 2, 1, 1, 0]
+        }
       },
       discipline: {
         avgDaysLate: 2.4,
@@ -222,7 +230,15 @@ function buildScenarios() {
         vacancyRate: 0.132,
         vacancyDetail: '16 units available by July 5th',
         incomingRate: 0.055,
-        incomingDetail: '7 new units became available in July'
+        incomingDetail: '7 new units became available in July',
+        vacancyTrend: {
+          months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          rates: [0.107, 0.11, 0.112, 0.116, 0.12, 0.125, 0.132, 0.128, 0.12, 0.113, 0.109, 0.105]
+        },
+        newInventory: {
+          months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          buildings: [0, 1, 1, 2, 2, 1, 1, 1, 2, 1, 0, 0]
+        }
       },
       discipline: {
         avgDaysLate: 3.1,
@@ -274,7 +290,15 @@ function buildScenarios() {
         vacancyRate: 0.095,
         vacancyDetail: '11 units expected vacant by September 5th',
         incomingRate: 0.083,
-        incomingDetail: '10 units targeted for turnover in September'
+        incomingDetail: '10 units targeted for turnover in September',
+        vacancyTrend: {
+          months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          rates: [0.1, 0.101, 0.103, 0.099, 0.097, 0.095, 0.094, 0.095, 0.093, 0.092, 0.091, 0.09]
+        },
+        newInventory: {
+          months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          buildings: [1, 1, 1, 1, 2, 2, 2, 2, 3, 2, 1, 1]
+        }
       },
       discipline: {
         avgDaysLate: 2.1,
@@ -326,7 +350,15 @@ function buildScenarios() {
         vacancyRate: 0.168,
         vacancyDetail: '16 units available by August 5th',
         incomingRate: 0.105,
-        incomingDetail: '10 new units releasing in August'
+        incomingDetail: '10 new units releasing in August',
+        vacancyTrend: {
+          months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          rates: [0.142, 0.148, 0.153, 0.158, 0.162, 0.166, 0.169, 0.168, 0.16, 0.152, 0.145, 0.14]
+        },
+        newInventory: {
+          months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          buildings: [2, 2, 3, 4, 4, 5, 5, 6, 5, 4, 3, 2]
+        }
       },
       discipline: {
         avgDaysLate: 3.6,
@@ -448,6 +480,16 @@ function updateCharts(scenario, state) {
     createPaymentPunctualityChart('paymentPunctualityChart', scenario.paymentPunctuality)
   );
   refreshPaymentPunctualityChart(paymentChart, scenario.paymentPunctuality);
+
+  const vacancyTrendChart = ensureChart(state, 'vacancyTrend', () =>
+    createVacancyTrendChart('vacancyTrendChart', scenario.supply.vacancyTrend)
+  );
+  refreshVacancyTrendChart(vacancyTrendChart, scenario.supply.vacancyTrend);
+
+  const newInventoryChart = ensureChart(state, 'newInventory', () =>
+    createNewInventoryChart('newInventoryChart', scenario.supply.newInventory)
+  );
+  refreshNewInventoryChart(newInventoryChart, scenario.supply.newInventory);
 
   updateChartsTheme(state.charts);
 }
@@ -791,4 +833,105 @@ function buildPunctualityColors(length, frontLoadedDays) {
   return Array.from({ length }, (_, idx) =>
     idx < frontLoadedDays ? 'rgba(56, 189, 248, 0.85)' : 'rgba(148, 163, 208, 0.65)'
   );
+}
+
+function createVacancyTrendChart(elementId, trend) {
+  const ctx = document.getElementById(elementId);
+  return new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: trend.months,
+      datasets: [
+        {
+          label: 'Vacancy Rate',
+          data: trend.rates,
+          backgroundColor: 'rgba(99, 102, 241, 0.8)',
+          borderRadius: 8,
+          maxBarThickness: 28
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label(context) {
+              return `${(context.parsed.y * 100).toFixed(1)}% vacancy`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: getThemeToken('chartGrid') },
+          ticks: {
+            callback(value) {
+              return `${(value * 100).toFixed(0)}%`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function refreshVacancyTrendChart(chart, trend) {
+  chart.data.labels = trend.months;
+  chart.data.datasets[0].data = trend.rates;
+  chart.update();
+}
+
+function createNewInventoryChart(elementId, inventory) {
+  const ctx = document.getElementById(elementId);
+  return new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: inventory.months,
+      datasets: [
+        {
+          label: 'New Buildings Online',
+          data: inventory.buildings,
+          backgroundColor: 'rgba(74, 222, 128, 0.85)',
+          borderRadius: 8,
+          maxBarThickness: 28
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label(context) {
+              return `${context.parsed.y} building${context.parsed.y === 1 ? '' : 's'} online`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: getThemeToken('chartGrid') },
+          ticks: {
+            precision: 0,
+            stepSize: 1
+          }
+        }
+      }
+    }
+  });
+}
+
+function refreshNewInventoryChart(chart, inventory) {
+  chart.data.labels = inventory.months;
+  chart.data.datasets[0].data = inventory.buildings;
+  chart.update();
 }
