@@ -404,10 +404,12 @@ body.print-mode .total__value {
 }
 
 body.print-mode canvas {
-  width: 100% !important;
-  max-height: 180px !important;
+  display: block;
+  width: auto !important;
+  max-width: 100% !important;
   height: auto !important;
-  aspect-ratio: auto !important;
+  max-height: none !important;
+  margin: 0 auto;
 }
 
 @media (max-width: 768px) {
