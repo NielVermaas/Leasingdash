@@ -248,6 +248,7 @@ function setupPrintMode(state) {
     currentThemeTokens = captureThemeTokens();
     applyChartDefaults(currentThemeTokens);
     updateChartsTheme(state.charts);
+    resizeCharts(state.charts);
     printPaletteActive = true;
   };
 
@@ -259,6 +260,7 @@ function setupPrintMode(state) {
     currentThemeTokens = captureThemeTokens();
     applyChartDefaults(currentThemeTokens);
     updateChartsTheme(state.charts);
+    resizeCharts(state.charts);
     printPaletteActive = false;
   };
 
@@ -336,6 +338,14 @@ function updateChartsTheme(charts) {
       });
     }
     chart.update();
+  });
+}
+
+function resizeCharts(charts) {
+  Object.values(charts).forEach((chart) => {
+    if (chart && typeof chart.resize === 'function') {
+      chart.resize();
+    }
   });
 }
 
