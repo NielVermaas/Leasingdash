@@ -331,21 +331,9 @@ body.print-mode .select-control select {
   padding: 0.45rem 2rem 0.45rem 0.85rem;
 }
 
+body.print-mode .page__header,
 body.print-mode .kpi-strip {
-  gap: 0.75rem;
-}
-
-body.print-mode .kpi-card {
-  padding: 1.1rem 1rem;
-  border-radius: 1rem;
-}
-
-body.print-mode .kpi-card__value {
-  font-size: 1.1rem;
-}
-
-body.print-mode .kpi-card__meta {
-  font-size: 0.75rem;
+  display: none !important;
 }
 
 body.print-mode .layout {
@@ -401,7 +389,10 @@ body.print-mode .total__value {
 }
 
 body.print-mode canvas {
-  max-height: 220px !important;
+  width: 100% !important;
+  max-height: 210px !important;
+  height: auto !important;
+  aspect-ratio: 16 / 9;
 }
 
 @media (max-width: 768px) {
@@ -432,6 +423,11 @@ body.print-mode canvas {
 @media print {
   body {
     background: #ffffff !important;
+  }
+
+  .page__header,
+  .kpi-strip {
+    display: none !important;
   }
 
   .page {
