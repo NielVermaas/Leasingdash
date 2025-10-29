@@ -798,7 +798,7 @@ function createPaymentPunctualityChart(elementId, punctuality) {
         {
           label: '% of Rent Received',
           data: punctuality.values,
-          backgroundColor: buildPunctualityColors(punctuality.values.length, punctuality.dueWindowDays),
+          backgroundColor: 'rgba(56, 189, 248, 0.85)',
           borderRadius: 8,
           maxBarThickness: 28
         }
@@ -844,17 +844,8 @@ function refreshPaymentPunctualityChart(chart, punctuality) {
   document.getElementById('paymentPunctualityCaption').textContent = `Share of monthly rent received each day — ${punctuality.label}`;
   chart.data.labels = punctuality.days;
   chart.data.datasets[0].data = punctuality.values;
-  chart.data.datasets[0].backgroundColor = buildPunctualityColors(
-    punctuality.values.length,
-    punctuality.dueWindowDays
-  );
+  chart.data.datasets[0].backgroundColor = 'rgba(56, 189, 248, 0.85)';
   chart.update();
-}
-
-function buildPunctualityColors(length, dueWindowDays) {
-  return Array.from({ length }, (_, idx) =>
-    idx < dueWindowDays ? 'rgba(56, 189, 248, 0.85)' : 'rgba(148, 163, 208, 0.65)'
-  );
 }
 
 function createVacancyTrendChart(elementId, trend) {
