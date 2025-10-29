@@ -15,14 +15,26 @@ const basePipeline = {
 
 const monthDayLabels = Array.from({ length: 31 }, (_, idx) => (idx + 1).toString());
 
-const typicalPunctualityDistribution = [
-  28, 20, 10, 6, 5,
-  2, 2, 2, 2, 2,
-  1.5, 1.5, 1.5, 1.5, 1.5,
-  1, 1, 1, 1, 1,
-  0.8, 0.8, 0.8, 0.8, 0.8,
-  0.9, 0.9, 0.9, 0.9, 0.9, 0.9
-];
+const typicalPunctualityDistribution = buildTypicalPunctualityDistribution();
+
+function buildTypicalPunctualityDistribution() {
+  const tableDistribution = [
+    { count: 1, value: 28 }, // Day 1
+    { count: 1, value: 20 }, // Day 2
+    { count: 1, value: 10 }, // Day 3
+    { count: 1, value: 6 },  // Day 4
+    { count: 1, value: 5 },  // Day 5
+    { count: 5, value: 2 },  // Days 6–10
+    { count: 5, value: 1.5 }, // Days 11–15
+    { count: 5, value: 1 },   // Days 16–20
+    { count: 5, value: 0.8 }, // Days 21–25
+    { count: 6, value: 0.9 }  // Days 26–30/31
+  ];
+
+  return tableDistribution.flatMap(({ count, value }) =>
+    Array.from({ length: count }, () => value)
+  );
+}
 
 const THEME_STORAGE_KEY = 'leasingdash-theme';
 let currentThemeTokens = null;
