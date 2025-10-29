@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leasing Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>Leasing Dashboard</h1>
+      <button id="lightModeToggle" aria-pressed="false" class="toggle-button">
+        <span class="toggle-button__icon" aria-hidden="true">🌙</span>
+        <span class="toggle-button__label">Enable Light Mode</span>
+      </button>
+    </header>
+
+    <section class="filters" aria-label="Project filters">
+      <div class="filter">
+        <label for="developerFilter">Developer</label>
+        <select id="developerFilter">
+          <option value="all">All Developers</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label for="developmentFilter">Development</label>
+        <select id="developmentFilter">
+          <option value="all">All Developments</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label for="fundingBankFilter">Funding Bank</label>
+        <select id="fundingBankFilter">
+          <option value="all">All Funding Banks</option>
+        </select>
+      </div>
+    </section>
+
+    <main>
+      <table class="projects" aria-describedby="projectsSummary">
+        <caption id="projectsSummary">Current lease projects</caption>
+        <thead>
+          <tr>
+            <th scope="col">Developer</th>
+            <th scope="col">Development</th>
+            <th scope="col">Funding Bank</th>
+            <th scope="col">Units</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody id="projectsTableBody"></tbody>
+      </table>
+    </main>
+
+    <template id="projectRowTemplate">
+      <tr>
+        <td data-field="developer"></td>
+        <td data-field="development"></td>
+        <td data-field="fundingBank"></td>
+        <td data-field="units"></td>
+        <td data-field="status"></td>
+      </tr>
+    </template>
+
+    <script src="script.js" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,212 @@
+:root {
+  --color-bg: #101418;
+  --color-surface: #1a2027;
+  --color-surface-alt: #242c35;
+  --color-text: #f7f8fb;
+  --color-muted: #9aa6b2;
+  --color-accent: #7dc4ff;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --shadow-elevation: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="light"] {
+  --color-bg: #f4f6fb;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f0f3f9;
+  --color-text: #1b1d21;
+  --color-muted: #5b6571;
+  --color-accent: #0a66c2;
+  --color-border: rgba(10, 102, 194, 0.15);
+  --shadow-elevation: 0 10px 30px rgba(10, 102, 194, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at 20% 20%, rgba(125, 196, 255, 0.15), transparent 45%),
+    radial-gradient(circle at 80% 10%, rgba(255, 140, 102, 0.12), transparent 46%),
+    var(--color-bg);
+  color: var(--color-text);
+  margin: 0;
+  min-height: 100vh;
+  padding: 2.5rem clamp(1.25rem, 5vw, 4rem);
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+body[data-theme="light"] {
+  background: radial-gradient(circle at 15% 15%, rgba(10, 102, 194, 0.12), transparent 42%),
+    radial-gradient(circle at 80% 10%, rgba(255, 186, 0, 0.18), transparent 46%),
+    var(--color-bg);
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  max-width: 1080px;
+  margin: 0 auto 2.5rem;
+}
+
+.app-header h1 {
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
+  font-weight: 700;
+  margin: 0;
+}
+
+.toggle-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.3s ease, background 0.4s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.toggle-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-elevation);
+}
+
+.toggle-button__icon {
+  font-size: 1.1rem;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  max-width: 1080px;
+  margin: 0 auto 2.75rem;
+}
+
+.filter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
+
+.filter select {
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
+  padding: 0.7rem 1rem;
+  background: var(--color-surface);
+  color: inherit;
+  font-size: 0.95rem;
+  transition: border 0.2s ease, box-shadow 0.3s ease, background 0.4s ease;
+}
+
+.filter select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px rgba(125, 196, 255, 0.25);
+}
+
+main {
+  max-width: 1080px;
+  margin: 0 auto 4rem;
+}
+
+.projects {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-elevation);
+  transition: background 0.4s ease;
+}
+
+.projects caption {
+  text-align: left;
+  padding: 1.5rem 2rem 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.projects thead th {
+  text-align: left;
+  padding: 1rem 2rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--color-muted);
+  background: var(--color-surface-alt);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.projects tbody td {
+  padding: 1.1rem 2rem;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.95rem;
+}
+
+.projects tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(125, 196, 255, 0.18);
+  color: var(--color-accent);
+}
+
+.status-pill--in-progress {
+  background: rgba(255, 186, 0, 0.18);
+  color: #ff9c07;
+}
+
+.status-pill--completed {
+  background: rgba(74, 222, 128, 0.2);
+  color: #21c45d;
+}
+
+.status-pill--on-hold {
+  background: rgba(255, 99, 132, 0.22);
+  color: #ff5277;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2.5rem;
+  color: var(--color-muted);
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 1.75rem clamp(1rem, 6vw, 2rem);
+  }
+
+  .projects caption,
+  .projects thead th,
+  .projects tbody td {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+}
