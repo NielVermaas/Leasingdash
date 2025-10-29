@@ -13,6 +13,8 @@ const basePipeline = {
   ]
 };
 
+const monthDayLabels = Array.from({ length: 31 }, (_, idx) => (idx + 1).toString());
+
 const THEME_STORAGE_KEY = 'leasingdash-theme';
 let currentThemeTokens = null;
 
@@ -162,9 +164,12 @@ function buildScenarios() {
       },
       paymentPunctuality: {
         label: 'September 2024 rent run',
-        days: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-        values: [46, 24, 12, 7, 5, 3, 1, 1, 0.5, 0.5],
-        frontLoadedDays: 5
+        days: [...monthDayLabels],
+        values: [
+          15.1, 12.83, 10.91, 9.27, 7.88, 6.7, 5.69, 4.84, 4.11, 3.5, 2.97, 2.53, 2.15, 1.83, 1.55, 1.32,
+          1.12, 0.95, 0.81, 0.69, 0.59, 0.5, 0.42, 0.36, 0.31, 0.26, 0.22, 0.19, 0.16, 0.14, 0.1
+        ],
+        frontLoadedDays: 7
       },
       supply: {
         vacancyRate: 0.117,
@@ -222,9 +227,12 @@ function buildScenarios() {
       },
       paymentPunctuality: {
         label: 'July 2024 rent run',
-        days: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-        values: [42, 22, 13, 8, 6, 4, 2, 1.5, 0.8, 0.7],
-        frontLoadedDays: 4
+        days: [...monthDayLabels],
+        values: [
+          17.05, 14.15, 11.75, 9.75, 8.09, 6.72, 5.58, 4.63, 3.84, 3.19, 2.65, 2.2, 1.82, 1.51, 1.26, 1.04,
+          0.87, 0.72, 0.6, 0.49, 0.41, 0.34, 0.28, 0.23, 0.19, 0.16, 0.13, 0.11, 0.09, 0.08, 0.07
+        ],
+        frontLoadedDays: 6
       },
       supply: {
         vacancyRate: 0.132,
@@ -282,9 +290,12 @@ function buildScenarios() {
       },
       paymentPunctuality: {
         label: 'Projected October 2024 rent run',
-        days: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-        values: [48, 25, 11, 6, 4, 3, 1, 1, 0.7, 0.3],
-        frontLoadedDays: 5
+        days: [...monthDayLabels],
+        values: [
+          12.23, 10.76, 9.47, 8.34, 7.34, 6.46, 5.68, 5.0, 4.4, 3.87, 3.41, 3.0, 2.64, 2.32, 2.04, 1.8,
+          1.58, 1.39, 1.23, 1.08, 0.95, 0.83, 0.73, 0.65, 0.57, 0.5, 0.44, 0.39, 0.34, 0.3, 0.26
+        ],
+        frontLoadedDays: 8
       },
       supply: {
         vacancyRate: 0.095,
@@ -342,9 +353,12 @@ function buildScenarios() {
       },
       paymentPunctuality: {
         label: 'August 2024 rent run',
-        days: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-        values: [38, 27, 14, 8, 6, 3, 2, 1, 0.7, 0.3],
-        frontLoadedDays: 4
+        days: [...monthDayLabels],
+        values: [
+          20.02, 16.02, 12.81, 10.25, 8.2, 6.56, 5.25, 4.2, 3.36, 2.69, 2.15, 1.72, 1.38, 1.1, 0.88, 0.7,
+          0.56, 0.45, 0.36, 0.29, 0.23, 0.18, 0.15, 0.12, 0.09, 0.08, 0.06, 0.05, 0.04, 0.03, 0.02
+        ],
+        frontLoadedDays: 6
       },
       supply: {
         vacancyRate: 0.168,
