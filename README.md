@@ -1,6 +1,6 @@
 # Leasing Dashboard
 
-A single-page dashboard that showcases residential tenant placement and leasing performance. The page now includes four ready-to-use timeframes—historical, current, projected, and lease-up—so you can compare how the portfolio performs across different periods and asset types.
+A single-page dashboard that showcases residential tenant placement and leasing performance. Use the month and year filters to pivot across four ready-to-use timeframes—historical, current, projected, and lease-up—to see how the portfolio performs across different periods and asset types.
 
 ## Repository Layout
 
@@ -35,8 +35,7 @@ If your remote repository is empty, push the latest dashboard commit:
    - **August 2024 – Core Portfolio**: the stabilized portfolio baseline.
    - **September 2024 – Core Portfolio**: forward-looking projections with improved conversions.
    - **October 2024 – Urban Lease-Up**: a downtown asset in lease-up with heavier traffic.
-4. Toggle between dark and light mode with the small moon/sun icon to the right of the year filter. The dashboard remembers your choice for the next visit.
-5. Review the KPI cards—vacancy snapshot, incoming supply, and payment discipline—and the supporting charts to understand how the selected timeframe is performing across placement, tenant, and supply metrics.
+4. Review the KPI cards—vacancy snapshot, incoming supply, and payment discipline—and the supporting charts to understand how the selected timeframe is performing across placement, tenant, and supply metrics.
 
 No build step is required—the dashboard is a static page.
 

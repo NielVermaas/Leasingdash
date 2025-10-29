@@ -87,13 +87,12 @@ function getFirstScenarioForYear(monthsByYear, timeframeIndex, year) {
   return timeframeIndex.get(buildTimeframeKey(firstMonth, year)) || null;
 }
 
-const THEME_STORAGE_KEY = 'leasingdash-theme';
 let currentThemeTokens = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   const state = { charts: {} };
 
-  initializeTheme(state);
+  initializeTheme();
 
   const scenarios = buildScenarios();
   const scenarioList = Object.values(scenarios);
@@ -211,30 +210,9 @@ document.addEventListener('DOMContentLoaded', () => {
   setupPrintMode(state);
 });
 
-function initializeTheme(state) {
-  if (getStoredTheme() === 'dark') {
-    document.body.classList.add('theme-dark');
-  }
-
+function initializeTheme() {
   currentThemeTokens = captureThemeTokens();
   applyChartDefaults(currentThemeTokens);
-
-  const toggle = document.getElementById('themeToggle');
-  if (!toggle) {
-    return;
-  }
-  const isDark = document.body.classList.contains('theme-dark');
-  updateThemeToggleUi(toggle, !isDark);
-
-  toggle.addEventListener('click', () => {
-    const nextIsDark = !document.body.classList.contains('theme-dark');
-    document.body.classList.toggle('theme-dark', nextIsDark);
-    persistTheme(nextIsDark ? 'dark' : 'light');
-    currentThemeTokens = captureThemeTokens();
-    applyChartDefaults(currentThemeTokens);
-    updateThemeToggleUi(toggle, !nextIsDark);
-    updateChartsTheme(state.charts);
-  });
 }
 
 function setupPrintMode(state) {
@@ -242,43 +220,28 @@ function setupPrintMode(state) {
     return;
   }
 
-  const toggle = document.getElementById('themeToggle');
-  let originalTheme = null;
+  let printPaletteActive = false;
 
   const applyPrintPalette = () => {
-    if (originalTheme !== null) {
+    if (printPaletteActive) {
       return;
     }
-    originalTheme = document.body.classList.contains('theme-dark') ? 'dark' : 'light';
     document.body.classList.add('print-mode');
-    if (originalTheme === 'dark') {
-      document.body.classList.remove('theme-dark');
-    }
     currentThemeTokens = captureThemeTokens();
     applyChartDefaults(currentThemeTokens);
     updateChartsTheme(state.charts);
-    if (toggle) {
-      const isDark = document.body.classList.contains('theme-dark');
-      updateThemeToggleUi(toggle, !isDark);
-    }
+    printPaletteActive = true;
   };
 
   const restorePalette = () => {
-    if (originalTheme === null) {
+    if (!printPaletteActive) {
       return;
-    }
-    if (originalTheme === 'dark') {
-      document.body.classList.add('theme-dark');
     }
     document.body.classList.remove('print-mode');
     currentThemeTokens = captureThemeTokens();
     applyChartDefaults(currentThemeTokens);
     updateChartsTheme(state.charts);
-    if (toggle) {
-      const isDark = document.body.classList.contains('theme-dark');
-      updateThemeToggleUi(toggle, !isDark);
-    }
-    originalTheme = null;
+    printPaletteActive = false;
   };
 
   window.addEventListener('beforeprint', applyPrintPalette);
@@ -306,22 +269,6 @@ function setupPrintMode(state) {
   }
 }
 
-function getStoredTheme() {
-  try {
-    return localStorage.getItem(THEME_STORAGE_KEY);
-  } catch (error) {
-    return null;
-  }
-}
-
-function persistTheme(theme) {
-  try {
-    localStorage.setItem(THEME_STORAGE_KEY, theme);
-  } catch (error) {
-    /* storage not available */
-  }
-}
-
 function captureThemeTokens() {
   const styles = getComputedStyle(document.documentElement);
   return {
@@ -344,21 +291,6 @@ function getThemeToken(key) {
 
 function getAccentColor(index, fallback) {
   return getThemeToken(`chartAccent${index}`) || fallback;
-}
-
-function updateThemeToggleUi(button, isLight) {
-  if (!button) return;
-  const icon = button.querySelector('.theme-toggle__icon');
-  const label = button.querySelector('.theme-toggle__label');
-  button.setAttribute('aria-pressed', String(isLight));
-  button.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
-  button.title = isLight ? 'Switch to dark mode' : 'Switch to light mode';
-  if (icon) {
-    icon.textContent = isLight ? '☀️' : '🌙';
-  }
-  if (label) {
-    label.textContent = isLight ? 'Light mode' : 'Dark mode';
-  }
 }
 
 function updateChartsTheme(charts) {
@@ -1020,7 +952,7 @@ function refreshDefaultRateChart(chart, defaultRate) {
 
 function createPaymentPunctualityChart(elementId, punctuality) {
   const ctx = document.getElementById(elementId);
-  document.getElementById('paymentPunctualityCaption').textContent = `Share of monthly rent received each day — ${punctuality.label}`;
+  document.getElementById('paymentPunctualityCaption').textContent = `This chart shows the share of monthly rent received each day during ${punctuality.label}.`;
   return new Chart(ctx, {
     type: 'bar',
     data: {
@@ -1072,7 +1004,7 @@ function createPaymentPunctualityChart(elementId, punctuality) {
 }
 
 function refreshPaymentPunctualityChart(chart, punctuality) {
-  document.getElementById('paymentPunctualityCaption').textContent = `Share of monthly rent received each day — ${punctuality.label}`;
+  document.getElementById('paymentPunctualityCaption').textContent = `This chart shows the share of monthly rent received each day during ${punctuality.label}.`;
   chart.data.labels = punctuality.days;
   chart.data.datasets[0].data = punctuality.values;
   chart.data.datasets[0].backgroundColor = getAccentColor(1, FALLBACK_COLORS.accent1);
