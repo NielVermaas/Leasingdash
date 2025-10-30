@@ -358,6 +358,7 @@ body.print-mode .layout {
 body.print-mode .panel {
   padding: 1.1rem;
   border-radius: 1rem;
+  border: none;
   break-inside: auto;
   page-break-inside: auto;
 }
@@ -389,6 +390,7 @@ body.print-mode .panel__grid--split > .panel__item:not(.panel__item--wide) canva
 body.print-mode .panel__item {
   padding: 0.9rem;
   border-radius: 0.9rem;
+  border: none;
   gap: 0.6rem;
   break-inside: avoid;
   page-break-inside: avoid;
@@ -483,20 +485,22 @@ body.print-mode canvas {
   }
 
   .panel {
+    border: none;
     break-inside: auto;
     page-break-inside: auto;
   }
 
   .layout > .panel {
-    margin-top: 1.2cm;
+    margin-top: 1.5cm;
   }
 
   .layout > .panel:first-of-type {
-    margin-top: 0.8cm;
+    margin-top: 0;
   }
 
   .panel__item,
   .kpi-card {
+    border: none;
     break-inside: avoid;
     page-break-inside: avoid;
   }
