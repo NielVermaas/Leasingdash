@@ -12,6 +12,7 @@
   --border: rgba(12, 59, 46, 0.18);
   --success: #42d48e;
   --warning: #0c3b2e;
+  --negative: #d1495b;
   --card-shadow: none;
   --panel-shadow: none;
   --panel-item-bg: rgba(255, 255, 255, 0.9);
@@ -63,6 +64,7 @@ body.print-mode {
   --chart-accent-2: rgba(12, 59, 46, 0.85);
   --chart-accent-3: rgba(214, 255, 92, 0.85);
   --chart-accent-4: rgba(202, 166, 255, 0.85);
+  --negative: #d1495b;
   background: #ffffff !important;
   color: #022015 !important;
 }
@@ -219,6 +221,15 @@ body.print-mode {
   grid-column: 1 / -1;
 }
 
+.panel__grid--tenant {
+  grid-template-columns: minmax(220px, 0.75fr) minmax(360px, 1.25fr);
+  gap: 1.2rem;
+}
+
+.panel__grid--tenant .panel__item--wide {
+  grid-column: 1 / -1;
+}
+
 
 .panel__item {
   background: var(--surface-contrast);
@@ -233,6 +244,35 @@ body.print-mode {
 
 .panel__item--wide {
   grid-column: 1 / -1;
+}
+
+.panel__item--metric {
+  justify-content: flex-start;
+}
+
+.stat-delta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.stat-delta__value {
+  font-size: 1.65rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.stat-delta__value--positive {
+  color: var(--success);
+}
+
+.stat-delta__value--negative {
+  color: var(--negative);
+}
+
+.stat-delta__detail {
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
 .panel__item-header h3 {
@@ -387,6 +427,18 @@ body.print-mode .panel__grid--split > .panel__item:not(.panel__item--wide) canva
   max-height: 280px !important;
 }
 
+body.print-mode .panel__grid--tenant {
+  grid-template-columns: minmax(220px, 0.75fr) minmax(360px, 1.25fr);
+}
+
+body.print-mode .panel__grid--tenant .panel__item--wide {
+  grid-column: 1 / -1;
+}
+
+body.print-mode .panel__grid--tenant > .panel__item:not(.panel__item--wide) canvas {
+  max-height: 280px !important;
+}
+
 body.print-mode .panel__item {
   padding: 0.9rem;
   border-radius: 0.9rem;
@@ -440,7 +492,8 @@ body.print-mode canvas {
   }
 
 @media (max-width: 900px) {
-  .panel__grid--split {
+  .panel__grid--split,
+  .panel__grid--tenant {
     grid-template-columns: 1fr;
   }
 }

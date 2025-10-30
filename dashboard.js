@@ -177,6 +177,20 @@ function formatCurrency(value) {
   return currencyFormatter.format(value);
 }
 
+function formatSignedCurrency(value) {
+  if (!Number.isFinite(value)) {
+    return formatCurrency(0);
+  }
+  const formatted = formatCurrency(Math.abs(value));
+  if (value > 0) {
+    return `+${formatted}`;
+  }
+  if (value < 0) {
+    return `-${formatted}`;
+  }
+  return formatted;
+}
+
 function formatPercentValue(value, decimals = 1) {
   if (!Number.isFinite(value)) {
     return '0%';
@@ -741,6 +755,7 @@ function getBaseValue(array, idx) {
 function updateScenario(scenario, state) {
   updateHeader(scenario);
   updateKpis(scenario);
+  updateRentDelta(scenario);
   updateCharts(scenario, state);
 }
 
@@ -769,6 +784,34 @@ function updateKpis(scenario) {
   document.getElementById('totalNoShowRate').textContent = formatPercent(noShowRate);
   document.getElementById('leadToPlacement').textContent = formatPercent(totals.placementRatio);
   document.getElementById('viewingToPlacement').textContent = formatPercent(totals.placementRatioFromViewings);
+}
+
+function updateRentDelta(scenario) {
+  const valueEl = document.getElementById('rentDeltaValue');
+  const detailEl = document.getElementById('rentDeltaDetail');
+  if (!valueEl || !detailEl) {
+    return;
+  }
+
+  valueEl.classList.remove('stat-delta__value--positive', 'stat-delta__value--negative');
+
+  const rentDelta = calculateRentDelta(scenario.rent, scenario.timeframe);
+  if (!rentDelta || rentDelta.previousValue === null || rentDelta.previousValue === undefined) {
+    valueEl.textContent = '—';
+    detailEl.textContent = 'No prior month comparison available.';
+    return;
+  }
+
+  valueEl.textContent = formatSignedCurrency(rentDelta.difference);
+  if (rentDelta.difference > 0) {
+    valueEl.classList.add('stat-delta__value--positive');
+  } else if (rentDelta.difference < 0) {
+    valueEl.classList.add('stat-delta__value--negative');
+  }
+
+  const previousLabel = rentDelta.previousLabel || 'prior month';
+  const currentLabel = rentDelta.currentLabel || scenario.timeframe?.monthLabel || 'current month';
+  detailEl.textContent = `${currentLabel} actual ${formatCurrency(rentDelta.currentValue)} vs ${previousLabel} actual ${formatCurrency(rentDelta.previousValue)}`;
 }
 
 function updateCharts(scenario, state) {
@@ -867,6 +910,52 @@ function computeNoShowRate(pipeline) {
 
 function formatPercent(value, decimals = 1) {
   return `${(value * 100).toFixed(decimals)}%`;
+}
+
+function calculateRentDelta(rent, timeframe) {
+  if (!rent || !Array.isArray(rent.actual) || !Array.isArray(rent.months)) {
+    return null;
+  }
+
+  const monthIndex = Number(timeframe?.monthKey) - 1;
+  if (!Number.isFinite(monthIndex) || monthIndex < 0 || monthIndex >= rent.actual.length) {
+    return null;
+  }
+
+  const currentValue = Number(rent.actual[monthIndex]);
+  if (!Number.isFinite(currentValue)) {
+    return null;
+  }
+
+  const previousIndex = monthIndex - 1;
+  if (previousIndex < 0) {
+    return {
+      difference: null,
+      previousValue: null,
+      previousLabel: null,
+      currentValue,
+      currentLabel: rent.months[monthIndex] || null
+    };
+  }
+
+  const previousValue = Number(rent.actual[previousIndex]);
+  if (!Number.isFinite(previousValue)) {
+    return {
+      difference: null,
+      previousValue: null,
+      previousLabel: rent.months[previousIndex] || null,
+      currentValue,
+      currentLabel: rent.months[monthIndex] || null
+    };
+  }
+
+  return {
+    difference: currentValue - previousValue,
+    previousValue,
+    previousLabel: rent.months[previousIndex] || null,
+    currentValue,
+    currentLabel: rent.months[monthIndex] || null
+  };
 }
 
 function applyChartDefaults(themeTokens) {
