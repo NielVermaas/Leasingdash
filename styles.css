@@ -487,6 +487,14 @@ body.print-mode canvas {
     page-break-inside: avoid;
   }
 
+  .layout > .panel {
+    margin-top: 1.2cm;
+  }
+
+  .layout > .panel:first-of-type {
+    margin-top: 0;
+  }
+
   .panel__item,
   .kpi-card {
     break-inside: avoid;
