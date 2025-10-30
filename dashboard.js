@@ -810,6 +810,7 @@ function updateRentDelta(scenario) {
   valueEl.classList.remove('stat-delta__value--positive', 'stat-delta__value--negative');
 
   const rentDelta = calculateRentDelta(scenario.rent, scenario.timeframe);
+  const defaultDelta = calculateDefaultDelta(scenario.defaultRate, scenario.timeframe);
   if (!rentDelta || rentDelta.previousValue === null || rentDelta.previousValue === undefined) {
     valueEl.textContent = '—';
     detailEl.textContent = 'No prior month comparison available.';
@@ -830,7 +831,23 @@ function updateRentDelta(scenario) {
 
   const previousLabel = rentDelta.previousLabel || 'prior month';
   const currentLabel = rentDelta.currentLabel || scenario.timeframe?.monthLabel || 'current month';
-  detailEl.textContent = `${currentLabel} actual ${formatCurrency(rentDelta.currentValue)} vs ${previousLabel} actual ${formatCurrency(rentDelta.previousValue)}`;
+  const detailParts = [
+    `${currentLabel} actual ${formatCurrency(rentDelta.currentValue)} vs ${previousLabel} actual ${formatCurrency(rentDelta.previousValue)}`
+  ];
+
+  if (
+    defaultDelta &&
+    Number.isFinite(defaultDelta.difference) &&
+    Number.isFinite(defaultDelta.currentRate) &&
+    Number.isFinite(defaultDelta.previousRate)
+  ) {
+    const defaultCurrent = formatPercentValue(defaultDelta.currentRate, 1);
+    const defaultPrevious = formatPercentValue(defaultDelta.previousRate, 1);
+    const defaultDifference = formatSignedPercent(defaultDelta.difference, 1);
+    detailParts.push(`Defaults: ${defaultCurrent} vs ${defaultPrevious} (${defaultDifference})`);
+  }
+
+  detailEl.textContent = detailParts.join(' • ');
 }
 
 function updateCharts(scenario, state) {
@@ -980,6 +997,75 @@ function calculateRentDelta(rent, timeframe) {
     currentValue,
     currentLabel: rent.months[monthIndex] || null,
     percentChange
+  };
+}
+
+function calculateDefaultDelta(defaultRate, timeframe) {
+  if (
+    !defaultRate ||
+    !Array.isArray(defaultRate.unpaid) ||
+    !Array.isArray(defaultRate.paid) ||
+    !Array.isArray(defaultRate.months)
+  ) {
+    return null;
+  }
+
+  const monthIndex = Number(timeframe?.monthKey) - 1;
+  if (!Number.isFinite(monthIndex) || monthIndex < 0 || monthIndex >= defaultRate.unpaid.length) {
+    return null;
+  }
+
+  const currentMetrics = getDefaultRateMetrics(defaultRate, monthIndex);
+  if (!currentMetrics) {
+    return null;
+  }
+
+  const previousIndex = monthIndex - 1;
+  if (previousIndex < 0) {
+    return {
+      difference: null,
+      previousRate: null,
+      previousLabel: null,
+      currentRate: currentMetrics.rate,
+      currentLabel: defaultRate.months[monthIndex] || null
+    };
+  }
+
+  const previousMetrics = getDefaultRateMetrics(defaultRate, previousIndex);
+  if (!previousMetrics) {
+    return {
+      difference: null,
+      previousRate: null,
+      previousLabel: defaultRate.months[previousIndex] || null,
+      currentRate: currentMetrics.rate,
+      currentLabel: defaultRate.months[monthIndex] || null
+    };
+  }
+
+  const difference = currentMetrics.rate - previousMetrics.rate;
+
+  return {
+    difference,
+    previousRate: previousMetrics.rate,
+    previousLabel: defaultRate.months[previousIndex] || null,
+    currentRate: currentMetrics.rate,
+    currentLabel: defaultRate.months[monthIndex] || null
+  };
+}
+
+function getDefaultRateMetrics(defaultRate, index) {
+  const paidValue = Number(defaultRate.paid[index]);
+  const unpaidValue = Number(defaultRate.unpaid[index]);
+  if (!Number.isFinite(paidValue) || !Number.isFinite(unpaidValue)) {
+    return null;
+  }
+  const total = paidValue + unpaidValue;
+  if (total <= 0) {
+    return null;
+  }
+  const rate = (unpaidValue / total) * 100;
+  return {
+    rate: Math.round(rate * 10) / 10
   };
 }
 
