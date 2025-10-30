@@ -803,45 +803,30 @@ function updateKpis(scenario) {
 function updateRentDelta(scenario) {
   const valueEl = document.getElementById('rentDeltaValue');
   const detailEl = document.getElementById('rentDeltaDetail');
-  const percentEl = document.getElementById('rentDeltaPercent');
   if (!valueEl || !detailEl) {
     return;
   }
 
   valueEl.classList.remove('stat-delta__value--positive', 'stat-delta__value--negative');
-  if (percentEl) {
-    percentEl.classList.remove('stat-delta__percent--positive', 'stat-delta__percent--negative');
-  }
 
   const rentDelta = calculateRentDelta(scenario.rent, scenario.timeframe);
   if (!rentDelta || rentDelta.previousValue === null || rentDelta.previousValue === undefined) {
     valueEl.textContent = '—';
-    if (percentEl) {
-      percentEl.textContent = '—';
-    }
     detailEl.textContent = 'No prior month comparison available.';
     return;
   }
 
-  valueEl.textContent = formatSignedCurrency(rentDelta.difference);
+  const formattedDifference = formatSignedCurrency(rentDelta.difference);
+  const hasPercent = Number.isFinite(rentDelta.percentChange);
+  const formattedPercent = hasPercent ? formatSignedPercent(rentDelta.percentChange, 1) : null;
+
   if (rentDelta.difference > 0) {
     valueEl.classList.add('stat-delta__value--positive');
   } else if (rentDelta.difference < 0) {
     valueEl.classList.add('stat-delta__value--negative');
   }
 
-  if (percentEl) {
-    if (rentDelta.percentChange === null || rentDelta.percentChange === undefined || !Number.isFinite(rentDelta.percentChange)) {
-      percentEl.textContent = '—';
-    } else {
-      percentEl.textContent = formatSignedPercent(rentDelta.percentChange, 1);
-      if (rentDelta.percentChange > 0) {
-        percentEl.classList.add('stat-delta__percent--positive');
-      } else if (rentDelta.percentChange < 0) {
-        percentEl.classList.add('stat-delta__percent--negative');
-      }
-    }
-  }
+  valueEl.textContent = formattedPercent ? `${formattedDifference} (${formattedPercent})` : formattedDifference;
 
   const previousLabel = rentDelta.previousLabel || 'prior month';
   const currentLabel = rentDelta.currentLabel || scenario.timeframe?.monthLabel || 'current month';
