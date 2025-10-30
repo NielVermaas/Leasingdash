@@ -222,7 +222,7 @@ body.print-mode {
 }
 
 .panel__grid--tenant {
-  grid-template-columns: minmax(220px, 0.75fr) minmax(360px, 1.25fr);
+  grid-template-columns: minmax(200px, 0.6fr) minmax(380px, 1.4fr);
   gap: 1.2rem;
 }
 
@@ -267,6 +267,20 @@ body.print-mode {
 }
 
 .stat-delta__value--negative {
+  color: var(--negative);
+}
+
+.stat-delta__percent {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.stat-delta__percent--positive {
+  color: var(--success);
+}
+
+.stat-delta__percent--negative {
   color: var(--negative);
 }
 
@@ -428,7 +442,7 @@ body.print-mode .panel__grid--split > .panel__item:not(.panel__item--wide) canva
 }
 
 body.print-mode .panel__grid--tenant {
-  grid-template-columns: minmax(220px, 0.75fr) minmax(360px, 1.25fr);
+  grid-template-columns: minmax(200px, 0.6fr) minmax(380px, 1.4fr);
 }
 
 body.print-mode .panel__grid--tenant .panel__item--wide {

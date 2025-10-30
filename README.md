@@ -54,5 +54,5 @@ No build step is required—the dashboard is a static page.
 - Average lease duration indicator highlights how long current residents remain in place for the active timeframe.
 - Annual supply trend visuals showing vacancy rate by month and how many buildings come online each month for the active timeframe.
 - Tenant performance trends with full-year monthly coverage, including rent collection bars comparing total contracted versus actual receipts with variance percentages noted on the bars, default rates with arrears percentages atop each bar, and payment punctuality detail across every day of the month that mirrors typical residential patterns.
-- A month-over-month rent collection stat block showing how much more or less was collected than the prior month for the active timeframe.
+- A month-over-month rent collection stat block showing how much more or less was collected than the prior month and the corresponding percentage change for the active timeframe.
 - Rent and arrears figures across the dashboard are expressed in South African Rand (ZAR) for consistency.
