@@ -30,6 +30,56 @@ const monthDayLabels = Array.from({ length: 31 }, (_, idx) => (idx + 1).toString
 
 const typicalPunctualityDistribution = buildTypicalPunctualityDistribution();
 
+const rentVarianceLabelPlugin = {
+  id: 'rentVarianceLabel',
+  afterDatasetsDraw(chart, args, opts) {
+    if (!chart || !chart.data?.datasets) {
+      return;
+    }
+
+    const datasetIndex = chart.data.datasets.findIndex((dataset) => dataset?.isActualRent);
+    if (datasetIndex === -1) {
+      return;
+    }
+
+    const dataset = chart.data.datasets[datasetIndex];
+    const varianceValues = dataset.varianceValues;
+    if (!Array.isArray(varianceValues)) {
+      return;
+    }
+
+    const meta = chart.getDatasetMeta(datasetIndex);
+    if (!meta || meta.hidden) {
+      return;
+    }
+
+    const ctx = chart.ctx;
+    const fontSize = opts?.fontSize || Chart.defaults.font.size || 12;
+    const fontFamily = Chart.defaults.font.family || 'Inter, sans-serif';
+    const offset = typeof opts?.offset === 'number' ? opts.offset : 12;
+    ctx.save();
+    ctx.font = `${fontSize}px ${fontFamily}`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+
+    meta.data.forEach((element, index) => {
+      const variance = varianceValues[index];
+      if (!Number.isFinite(variance)) {
+        return;
+      }
+      const { x, y } = element.tooltipPosition();
+      ctx.fillStyle = variance >= 0 ? getAccentColor(1, FALLBACK_COLORS.accent1) : getAccentColor(4, FALLBACK_COLORS.accent4);
+      ctx.fillText(formatVarianceLabel(variance), x, y - offset);
+    });
+
+    ctx.restore();
+  }
+};
+
+if (typeof Chart !== 'undefined') {
+  Chart.register(rentVarianceLabelPlugin);
+}
+
 function buildTypicalPunctualityDistribution() {
   const tableDistribution = [
     { count: 1, value: 18 },   // Day 1
@@ -89,6 +139,14 @@ function formatPercentValue(value, decimals = 1) {
   return `${rounded.toFixed(decimals)}%`;
 }
 
+function formatVarianceLabel(value) {
+  if (!Number.isFinite(value)) {
+    return '0.0%';
+  }
+  const sign = value > 0 ? '+' : '';
+  return `${sign}${value.toFixed(1)}%`;
+}
+
 function calculateRentVariancePercent(expected, actual) {
   return expected.map((expectedValue, index) => {
     const baseline = Number(expectedValue) || 0;
@@ -99,21 +157,6 @@ function calculateRentVariancePercent(expected, actual) {
     const variance = ((actualValue - baseline) / baseline) * 100;
     return Math.round(variance * 10) / 10;
   });
-}
-
-function getVarianceScaleSuggestions(values) {
-  if (!Array.isArray(values) || values.length === 0) {
-    return { suggestedMin: 0, suggestedMax: 1 };
-  }
-  const minValue = Math.min(...values);
-  const maxValue = Math.max(...values);
-  const padding = 0.5;
-  let suggestedMin = minValue < 0 ? Math.min(minValue - padding, minValue * 1.1) : 0;
-  let suggestedMax = maxValue > 0 ? Math.max(maxValue + padding, maxValue * 1.1) : 0;
-  if (suggestedMin === 0 && suggestedMax === 0) {
-    suggestedMax = 1;
-  }
-  return { suggestedMin, suggestedMax };
 }
 
 function buildTimeframeKey(monthKey, year) {
@@ -895,7 +938,10 @@ function refreshAttendanceChart(chart, labels, dataset) {
 function createRentCollectionChart(elementId, rent) {
   const ctx = document.getElementById(elementId);
   const variancePercent = calculateRentVariancePercent(rent.expected, rent.actual);
-  const varianceScale = getVarianceScaleSuggestions(variancePercent);
+  const rentCeiling = getBufferedScaleMax([...rent.expected, ...rent.actual], {
+    multiplier: 1.12,
+    minBuffer: 2000
+  });
 
   return new Chart(ctx, {
     type: 'bar',
@@ -907,8 +953,7 @@ function createRentCollectionChart(elementId, rent) {
           data: rent.expected,
           backgroundColor: getAccentColor(2, FALLBACK_COLORS.accent2),
           borderRadius: 8,
-          maxBarThickness: 28,
-          yAxisID: 'y'
+          maxBarThickness: 28
         },
         {
           label: 'Actual Rent',
@@ -916,20 +961,8 @@ function createRentCollectionChart(elementId, rent) {
           backgroundColor: getAccentColor(1, FALLBACK_COLORS.accent1),
           borderRadius: 8,
           maxBarThickness: 28,
-          yAxisID: 'y'
-        },
-        {
-          type: 'line',
-          label: 'Variance vs Contracted (%)',
-          data: variancePercent,
-          yAxisID: 'y1',
-          borderColor: getAccentColor(3, FALLBACK_COLORS.accent3),
-          backgroundColor: getAccentColor(3, FALLBACK_COLORS.accent3),
-          borderWidth: 2,
-          tension: 0.35,
-          pointRadius: 4,
-          pointHoverRadius: 5,
-          fill: false
+          isActualRent: true,
+          varianceValues: variancePercent
         }
       ]
     },
@@ -940,13 +973,20 @@ function createRentCollectionChart(elementId, rent) {
         intersect: false
       },
       plugins: {
+        rentVarianceLabel: {
+          offset: 14
+        },
         tooltip: {
           callbacks: {
             label(context) {
-              if (context.dataset.type === 'line') {
-                return `${context.dataset.label}: ${formatPercentValue(context.parsed.y)}`;
+              const valueLabel = formatCurrency(context.parsed.y);
+              if (context.dataset.isActualRent) {
+                const variance = context.dataset.varianceValues?.[context.dataIndex];
+                if (Number.isFinite(variance)) {
+                  return `${context.dataset.label}: ${valueLabel} (${formatVarianceLabel(variance)})`;
+                }
               }
-              return `${context.dataset.label}: ${formatCurrency(context.parsed.y)}`;
+              return `${context.dataset.label}: ${valueLabel}`;
             }
           }
         }
@@ -965,24 +1005,8 @@ function createRentCollectionChart(elementId, rent) {
             display: true,
             text: 'Rent Collected by 5th (USD)',
             color: getThemeToken('axisTitle') || getThemeToken('chartText')
-          }
-        },
-        y1: {
-          beginAtZero: true,
-          position: 'right',
-          grid: {
-            drawOnChartArea: false
           },
-          ticks: {
-            callback: (value) => formatPercentValue(value)
-          },
-          title: {
-            display: true,
-            text: 'Variance vs Contracted (%)',
-            color: getThemeToken('axisTitle') || getThemeToken('chartText')
-          },
-          suggestedMin: varianceScale.suggestedMin,
-          suggestedMax: varianceScale.suggestedMax
+          suggestedMax: rentCeiling
         }
       }
     }
@@ -991,21 +1015,20 @@ function createRentCollectionChart(elementId, rent) {
 
 function refreshRentCollectionChart(chart, rent) {
   const variancePercent = calculateRentVariancePercent(rent.expected, rent.actual);
-  const varianceScale = getVarianceScaleSuggestions(variancePercent);
+  const rentCeiling = getBufferedScaleMax([...rent.expected, ...rent.actual], {
+    multiplier: 1.12,
+    minBuffer: 2000
+  });
 
   chart.data.labels = rent.months;
   chart.data.datasets[0].data = rent.expected;
   chart.data.datasets[0].backgroundColor = getAccentColor(2, FALLBACK_COLORS.accent2);
   chart.data.datasets[1].data = rent.actual;
   chart.data.datasets[1].backgroundColor = getAccentColor(1, FALLBACK_COLORS.accent1);
-  chart.data.datasets[2].data = variancePercent;
-  chart.data.datasets[2].borderColor = getAccentColor(3, FALLBACK_COLORS.accent3);
-  chart.data.datasets[2].backgroundColor = getAccentColor(3, FALLBACK_COLORS.accent3);
-  chart.data.datasets[2].type = 'line';
+  chart.data.datasets[1].varianceValues = variancePercent;
+  chart.data.datasets[1].isActualRent = true;
   chart.options.scales.y.ticks.callback = (value) => formatCurrency(value);
-  chart.options.scales.y1.ticks.callback = (value) => formatPercentValue(value);
-  chart.options.scales.y1.suggestedMin = varianceScale.suggestedMin;
-  chart.options.scales.y1.suggestedMax = varianceScale.suggestedMax;
+  chart.options.scales.y.suggestedMax = rentCeiling;
   chart.update();
 }
 
