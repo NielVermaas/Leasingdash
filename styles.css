@@ -222,7 +222,7 @@ body.print-mode {
 }
 
 .panel__grid--tenant {
-  grid-template-columns: minmax(160px, 0.32fr) minmax(420px, 1.68fr);
+  grid-template-columns: minmax(190px, 0.4fr) minmax(380px, 1.6fr);
   gap: 1.2rem;
 }
 
@@ -248,7 +248,7 @@ body.print-mode {
 
 .panel__item--metric {
   justify-content: flex-start;
-  max-width: 250px;
+  max-width: 300px;
   align-self: flex-start;
 }
 
@@ -449,7 +449,7 @@ body.print-mode .panel__grid--split > .panel__item:not(.panel__item--wide) canva
 }
 
 body.print-mode .panel__grid--tenant {
-  grid-template-columns: minmax(160px, 0.32fr) minmax(420px, 1.68fr);
+  grid-template-columns: minmax(190px, 0.4fr) minmax(380px, 1.6fr);
 }
 
 body.print-mode .panel__grid--tenant .panel__item--wide {
@@ -461,7 +461,7 @@ body.print-mode .panel__grid--tenant > .panel__item:not(.panel__item--wide) canv
 }
 
 body.print-mode .panel__grid--tenant .panel__item--metric {
-  max-width: 240px;
+  max-width: 280px;
 }
 
 body.print-mode .panel__item {
