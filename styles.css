@@ -463,7 +463,7 @@ body.print-mode canvas {
   body::after {
     content: 'Page ' counter(page);
     position: fixed;
-    bottom: 1cm;
+    bottom: 0.4cm;
     right: 1cm;
     font-size: 0.75rem;
     color: #022015;
