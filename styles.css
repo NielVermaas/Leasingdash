@@ -254,7 +254,7 @@ body.print-mode {
 .stat-delta {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.8rem;
 }
 
 .stat-delta__value {
