@@ -358,8 +358,8 @@ body.print-mode .layout {
 body.print-mode .panel {
   padding: 1.1rem;
   border-radius: 1rem;
-  break-inside: avoid;
-  page-break-inside: avoid;
+  break-inside: auto;
+  page-break-inside: auto;
 }
 
 body.print-mode .panel h2 {
@@ -370,8 +370,8 @@ body.print-mode .panel h2 {
 
 body.print-mode .panel__grid {
   gap: 1rem;
-  break-inside: avoid;
-  page-break-inside: avoid;
+  break-inside: auto;
+  page-break-inside: auto;
 }
 
 body.print-mode .panel__grid--split {
@@ -483,8 +483,8 @@ body.print-mode canvas {
   }
 
   .panel {
-    break-inside: avoid;
-    page-break-inside: avoid;
+    break-inside: auto;
+    page-break-inside: auto;
   }
 
   .layout > .panel {
