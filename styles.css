@@ -251,29 +251,48 @@ body.print-mode {
   max-width: 260px;
 }
 
-.stat-delta {
+.stat-stack {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
-.stat-delta__value {
-  font-size: 1.55rem;
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.95rem 1rem;
+  border-radius: 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.stat-card__label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.stat-card__value {
+  font-size: 1.4rem;
   font-weight: 600;
   color: var(--text-primary);
 }
 
-.stat-delta__value--positive {
+.stat-card__value--positive {
   color: var(--success);
 }
 
-.stat-delta__value--negative {
+.stat-card__value--negative {
   color: var(--negative);
 }
 
-.stat-delta__detail {
+.stat-card__detail {
   font-size: 0.85rem;
   color: var(--text-muted);
+  line-height: 1.35;
 }
 
 .panel__item-header h3 {

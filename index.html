@@ -120,9 +120,17 @@
               <h3>Month-over-Month Collection</h3>
               <p>Summarizes how the current month’s rent collected compares with the prior month.</p>
             </header>
-            <div class="stat-delta">
-              <span class="stat-delta__value" id="rentDeltaValue">—</span>
-              <span class="stat-delta__detail" id="rentDeltaDetail"></span>
+            <div class="stat-stack">
+              <div class="stat-card">
+                <span class="stat-card__label">Rent Collected</span>
+                <span class="stat-card__value" id="rentDeltaValue">—</span>
+                <span class="stat-card__detail" id="rentDeltaDetail"></span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-card__label">Unpaid Rent</span>
+                <span class="stat-card__value" id="defaultDeltaValue">—</span>
+                <span class="stat-card__detail" id="defaultDeltaDetail"></span>
+              </div>
             </div>
           </div>
           <div class="panel__item">

@@ -265,6 +265,23 @@ function formatSignedPercent(value, decimals = 1) {
   return formatted;
 }
 
+function formatSignedPercentPoints(value, decimals = 1) {
+  if (!Number.isFinite(value)) {
+    const zero = (0).toFixed(decimals);
+    return `${zero} pts`;
+  }
+  const factor = 10 ** decimals;
+  const rounded = Math.round(Math.abs(value) * factor) / factor;
+  const base = `${rounded.toFixed(decimals)} pts`;
+  if (value > 0) {
+    return `+${base}`;
+  }
+  if (value < 0) {
+    return `-${base}`;
+  }
+  return base;
+}
+
 function formatVarianceLabel(value) {
   if (!Number.isFinite(value)) {
     return '0.0%';
@@ -852,53 +869,75 @@ function updateKpis(scenario) {
 }
 
 function updateRentDelta(scenario) {
-  const valueEl = document.getElementById('rentDeltaValue');
-  const detailEl = document.getElementById('rentDeltaDetail');
-  if (!valueEl || !detailEl) {
+  const rentValueEl = document.getElementById('rentDeltaValue');
+  const rentDetailEl = document.getElementById('rentDeltaDetail');
+  const defaultValueEl = document.getElementById('defaultDeltaValue');
+  const defaultDetailEl = document.getElementById('defaultDeltaDetail');
+  if (!rentValueEl || !rentDetailEl || !defaultValueEl || !defaultDetailEl) {
     return;
   }
 
-  valueEl.classList.remove('stat-delta__value--positive', 'stat-delta__value--negative');
+  [rentValueEl, defaultValueEl].forEach((el) => {
+    el.classList.remove('stat-card__value--positive', 'stat-card__value--negative');
+  });
 
   const rentDelta = calculateRentDelta(scenario.rent, scenario.timeframe);
-  const defaultDelta = calculateDefaultDelta(scenario.defaultRate, scenario.timeframe);
   if (!rentDelta || rentDelta.previousValue === null || rentDelta.previousValue === undefined) {
-    valueEl.textContent = '—';
-    detailEl.textContent = 'No prior month comparison available.';
+    rentValueEl.textContent = '—';
+    rentDetailEl.textContent = 'No prior month comparison available.';
+  } else {
+    const formattedDifference = formatSignedCurrency(rentDelta.difference);
+    const hasPercent = Number.isFinite(rentDelta.percentChange);
+    const formattedPercent = hasPercent ? formatSignedPercent(rentDelta.percentChange, 1) : null;
+
+    if (rentDelta.difference > 0) {
+      rentValueEl.classList.add('stat-card__value--positive');
+    } else if (rentDelta.difference < 0) {
+      rentValueEl.classList.add('stat-card__value--negative');
+    }
+
+    rentValueEl.textContent = formattedPercent ? `${formattedDifference} (${formattedPercent})` : formattedDifference;
+
+    const previousLabel = rentDelta.previousLabel || 'prior month';
+    const currentLabel = rentDelta.currentLabel || scenario.timeframe?.monthLabel || 'current month';
+    rentDetailEl.textContent = `${currentLabel} actual ${formatCurrency(rentDelta.currentValue)} vs ${previousLabel} actual ${formatCurrency(
+      rentDelta.previousValue
+    )}`;
+  }
+
+  const defaultDelta = calculateDefaultDelta(scenario.defaultRate, scenario.timeframe);
+  if (
+    !defaultDelta ||
+    defaultDelta.previousRate === null ||
+    defaultDelta.previousRate === undefined ||
+    !Number.isFinite(defaultDelta.currentRate)
+  ) {
+    defaultValueEl.textContent = '—';
+    defaultDetailEl.textContent = 'No prior month comparison available.';
     return;
   }
 
-  const formattedDifference = formatSignedCurrency(rentDelta.difference);
-  const hasPercent = Number.isFinite(rentDelta.percentChange);
-  const formattedPercent = hasPercent ? formatSignedPercent(rentDelta.percentChange, 1) : null;
+  const defaultDifference = Number.isFinite(defaultDelta.difference)
+    ? formatSignedPercentPoints(defaultDelta.difference, 1)
+    : '0.0 pts';
 
-  if (rentDelta.difference > 0) {
-    valueEl.classList.add('stat-delta__value--positive');
-  } else if (rentDelta.difference < 0) {
-    valueEl.classList.add('stat-delta__value--negative');
+  if (Number.isFinite(defaultDelta.difference)) {
+    if (defaultDelta.difference < 0) {
+      defaultValueEl.classList.add('stat-card__value--positive');
+    } else if (defaultDelta.difference > 0) {
+      defaultValueEl.classList.add('stat-card__value--negative');
+    }
   }
 
-  valueEl.textContent = formattedPercent ? `${formattedDifference} (${formattedPercent})` : formattedDifference;
+  defaultValueEl.textContent = defaultDifference;
 
-  const previousLabel = rentDelta.previousLabel || 'prior month';
-  const currentLabel = rentDelta.currentLabel || scenario.timeframe?.monthLabel || 'current month';
-  const detailParts = [
-    `${currentLabel} actual ${formatCurrency(rentDelta.currentValue)} vs ${previousLabel} actual ${formatCurrency(rentDelta.previousValue)}`
-  ];
-
-  if (
-    defaultDelta &&
-    Number.isFinite(defaultDelta.difference) &&
-    Number.isFinite(defaultDelta.currentRate) &&
-    Number.isFinite(defaultDelta.previousRate)
-  ) {
-    const defaultCurrent = formatPercentValue(defaultDelta.currentRate, 1);
-    const defaultPrevious = formatPercentValue(defaultDelta.previousRate, 1);
-    const defaultDifference = formatSignedPercent(defaultDelta.difference, 1);
-    detailParts.push(`Defaults: ${defaultCurrent} vs ${defaultPrevious} (${defaultDifference})`);
-  }
-
-  detailEl.textContent = detailParts.join(' • ');
+  const defaultPreviousLabel = defaultDelta.previousLabel || 'prior month';
+  const defaultCurrentLabel = defaultDelta.currentLabel || scenario.timeframe?.monthLabel || 'current month';
+  const currentRate = formatPercentValue(defaultDelta.currentRate, 1);
+  const previousRate = Number.isFinite(defaultDelta.previousRate)
+    ? formatPercentValue(defaultDelta.previousRate, 1)
+    : 'n/a';
+  defaultDetailEl.textContent = `${defaultCurrentLabel} default ${currentRate} vs ${defaultPreviousLabel} default ${previousRate}`;
 }
 
 function updateCharts(scenario, state) {
