@@ -5,6 +5,12 @@ const FALLBACK_COLORS = {
   accent4: 'rgba(202, 166, 255, 0.85)'
 };
 
+const currencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  maximumFractionDigits: 0
+});
+
 const basePipeline = {
   applications: [
     5, 6, 4, 7, 5, 6, 8, 5, 4, 7, 6, 5, 6, 7, 4, 5, 6, 7, 5, 6, 4, 5, 6, 7, 5, 6, 4, 5, 7, 6, 5
@@ -65,6 +71,49 @@ function getBufferedScaleMax(values, { multiplier = 1.1, minBuffer = 0, cap = nu
     buffered = Math.min(buffered, cap);
   }
   return buffered;
+}
+
+function formatCurrency(value) {
+  if (!Number.isFinite(value)) {
+    return currencyFormatter.format(0);
+  }
+  return currencyFormatter.format(value);
+}
+
+function formatPercentValue(value, decimals = 1) {
+  if (!Number.isFinite(value)) {
+    return '0%';
+  }
+  const factor = 10 ** decimals;
+  const rounded = Math.round(value * factor) / factor;
+  return `${rounded.toFixed(decimals)}%`;
+}
+
+function calculateRentVariancePercent(expected, actual) {
+  return expected.map((expectedValue, index) => {
+    const baseline = Number(expectedValue) || 0;
+    const actualValue = Number(actual[index]) || 0;
+    if (baseline === 0) {
+      return 0;
+    }
+    const variance = ((actualValue - baseline) / baseline) * 100;
+    return Math.round(variance * 10) / 10;
+  });
+}
+
+function getVarianceScaleSuggestions(values) {
+  if (!Array.isArray(values) || values.length === 0) {
+    return { suggestedMin: 0, suggestedMax: 1 };
+  }
+  const minValue = Math.min(...values);
+  const maxValue = Math.max(...values);
+  const padding = 0.5;
+  let suggestedMin = minValue < 0 ? Math.min(minValue - padding, minValue * 1.1) : 0;
+  let suggestedMax = maxValue > 0 ? Math.max(maxValue + padding, maxValue * 1.1) : 0;
+  if (suggestedMin === 0 && suggestedMax === 0) {
+    suggestedMax = 1;
+  }
+  return { suggestedMin, suggestedMax };
 }
 
 function buildTimeframeKey(monthKey, year) {
@@ -845,36 +894,95 @@ function refreshAttendanceChart(chart, labels, dataset) {
 
 function createRentCollectionChart(elementId, rent) {
   const ctx = document.getElementById(elementId);
+  const variancePercent = calculateRentVariancePercent(rent.expected, rent.actual);
+  const varianceScale = getVarianceScaleSuggestions(variancePercent);
+
   return new Chart(ctx, {
     type: 'bar',
     data: {
       labels: rent.months,
       datasets: [
         {
-          label: 'Expected Rent',
+          label: 'Total Contracted Rent',
           data: rent.expected,
           backgroundColor: getAccentColor(2, FALLBACK_COLORS.accent2),
           borderRadius: 8,
-          maxBarThickness: 28
+          maxBarThickness: 28,
+          yAxisID: 'y'
         },
         {
           label: 'Actual Rent',
           data: rent.actual,
           backgroundColor: getAccentColor(1, FALLBACK_COLORS.accent1),
           borderRadius: 8,
-          maxBarThickness: 28
+          maxBarThickness: 28,
+          yAxisID: 'y'
+        },
+        {
+          type: 'line',
+          label: 'Variance vs Contracted (%)',
+          data: variancePercent,
+          yAxisID: 'y1',
+          borderColor: getAccentColor(3, FALLBACK_COLORS.accent3),
+          backgroundColor: getAccentColor(3, FALLBACK_COLORS.accent3),
+          borderWidth: 2,
+          tension: 0.35,
+          pointRadius: 4,
+          pointHoverRadius: 5,
+          fill: false
         }
       ]
     },
     options: {
       responsive: true,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label(context) {
+              if (context.dataset.type === 'line') {
+                return `${context.dataset.label}: ${formatPercentValue(context.parsed.y)}`;
+              }
+              return `${context.dataset.label}: ${formatCurrency(context.parsed.y)}`;
+            }
+          }
+        }
+      },
       scales: {
         x: {
           grid: { display: false }
         },
         y: {
           beginAtZero: true,
-          grid: { color: getThemeToken('chartGrid') }
+          grid: { color: getThemeToken('chartGrid') },
+          ticks: {
+            callback: (value) => formatCurrency(value)
+          },
+          title: {
+            display: true,
+            text: 'Rent Collected by 5th (USD)',
+            color: getThemeToken('axisTitle') || getThemeToken('chartText')
+          }
+        },
+        y1: {
+          beginAtZero: true,
+          position: 'right',
+          grid: {
+            drawOnChartArea: false
+          },
+          ticks: {
+            callback: (value) => formatPercentValue(value)
+          },
+          title: {
+            display: true,
+            text: 'Variance vs Contracted (%)',
+            color: getThemeToken('axisTitle') || getThemeToken('chartText')
+          },
+          suggestedMin: varianceScale.suggestedMin,
+          suggestedMax: varianceScale.suggestedMax
         }
       }
     }
@@ -882,11 +990,22 @@ function createRentCollectionChart(elementId, rent) {
 }
 
 function refreshRentCollectionChart(chart, rent) {
+  const variancePercent = calculateRentVariancePercent(rent.expected, rent.actual);
+  const varianceScale = getVarianceScaleSuggestions(variancePercent);
+
   chart.data.labels = rent.months;
   chart.data.datasets[0].data = rent.expected;
   chart.data.datasets[0].backgroundColor = getAccentColor(2, FALLBACK_COLORS.accent2);
   chart.data.datasets[1].data = rent.actual;
   chart.data.datasets[1].backgroundColor = getAccentColor(1, FALLBACK_COLORS.accent1);
+  chart.data.datasets[2].data = variancePercent;
+  chart.data.datasets[2].borderColor = getAccentColor(3, FALLBACK_COLORS.accent3);
+  chart.data.datasets[2].backgroundColor = getAccentColor(3, FALLBACK_COLORS.accent3);
+  chart.data.datasets[2].type = 'line';
+  chart.options.scales.y.ticks.callback = (value) => formatCurrency(value);
+  chart.options.scales.y1.ticks.callback = (value) => formatPercentValue(value);
+  chart.options.scales.y1.suggestedMin = varianceScale.suggestedMin;
+  chart.options.scales.y1.suggestedMax = varianceScale.suggestedMax;
   chart.update();
 }
 

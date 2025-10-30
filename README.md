@@ -53,4 +53,4 @@ No build step is required—the dashboard is a static page.
 - Portfolio supply KPIs (vacancy, incoming units, conversion rates) recalculated automatically for each version.
 - Average lease duration indicator highlights how long current residents remain in place for the active timeframe.
 - Annual supply trend visuals showing vacancy rate by month and how many buildings come online each month for the active timeframe.
-- Tenant performance trends with full-year monthly coverage for rent collection and default rates, plus payment punctuality detail across all 31 days that mirrors typical residential patterns (18% paid on the 1st, 12% on the 2nd, tapering through month-end).
+- Tenant performance trends with full-year monthly coverage, including rent collection bars comparing total contracted versus actual receipts and a variance percentage line, default rates, and payment punctuality detail across every day of the month that mirrors typical residential patterns.
