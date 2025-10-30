@@ -249,13 +249,17 @@ body.print-mode {
 .panel__item--metric {
   justify-content: flex-start;
   max-width: 300px;
-  align-self: flex-start;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .stat-stack {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  flex: 1;
 }
 
 .stat-card {
