@@ -5,10 +5,11 @@ const FALLBACK_COLORS = {
   accent4: 'rgba(202, 166, 255, 0.85)'
 };
 
-const currencyFormatter = new Intl.NumberFormat('en-US', {
+const currencyFormatter = new Intl.NumberFormat('en-ZA', {
   style: 'currency',
-  currency: 'USD',
-  maximumFractionDigits: 0
+  currency: 'ZAR',
+  maximumFractionDigits: 0,
+  minimumFractionDigits: 0
 });
 
 const basePipeline = {
@@ -76,8 +77,54 @@ const rentVarianceLabelPlugin = {
   }
 };
 
+const defaultRateLabelPlugin = {
+  id: 'defaultRateLabel',
+  afterDatasetsDraw(chart, args, opts) {
+    if (!chart || !chart.data?.datasets) {
+      return;
+    }
+
+    const datasetIndex = chart.data.datasets.findIndex((dataset) => dataset?.isDefaultUnpaid);
+    if (datasetIndex === -1) {
+      return;
+    }
+
+    const dataset = chart.data.datasets[datasetIndex];
+    const percentages = dataset.defaultPercentages;
+    if (!Array.isArray(percentages)) {
+      return;
+    }
+
+    const meta = chart.getDatasetMeta(datasetIndex);
+    if (!meta || meta.hidden) {
+      return;
+    }
+
+    const ctx = chart.ctx;
+    const fontSize = opts?.fontSize || Chart.defaults.font.size || 12;
+    const fontFamily = Chart.defaults.font.family || 'Inter, sans-serif';
+    const offset = typeof opts?.offset === 'number' ? opts.offset : 10;
+    ctx.save();
+    ctx.font = `${fontSize}px ${fontFamily}`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.fillStyle = getThemeToken('chartText') || '#1f2933';
+
+    meta.data.forEach((element, index) => {
+      const percentage = percentages[index];
+      if (!Number.isFinite(percentage)) {
+        return;
+      }
+      const { x, y } = element.tooltipPosition();
+      ctx.fillText(formatPercentValue(percentage, 1), x, y - offset);
+    });
+
+    ctx.restore();
+  }
+};
+
 if (typeof Chart !== 'undefined') {
-  Chart.register(rentVarianceLabelPlugin);
+  Chart.register(rentVarianceLabelPlugin, defaultRateLabelPlugin);
 }
 
 function buildTypicalPunctualityDistribution() {
@@ -156,6 +203,19 @@ function calculateRentVariancePercent(expected, actual) {
     }
     const variance = ((actualValue - baseline) / baseline) * 100;
     return Math.round(variance * 10) / 10;
+  });
+}
+
+function calculateDefaultPercentages(defaultRate) {
+  return defaultRate.unpaid.map((unpaidValue, index) => {
+    const paidValue = Number(defaultRate.paid[index]) || 0;
+    const arrears = Number(unpaidValue) || 0;
+    const total = paidValue + arrears;
+    if (total === 0) {
+      return 0;
+    }
+    const percentage = (arrears / total) * 100;
+    return Math.round(percentage * 10) / 10;
   });
 }
 
@@ -1003,7 +1063,7 @@ function createRentCollectionChart(elementId, rent) {
           },
           title: {
             display: true,
-            text: 'Rent Collected by 5th (USD)',
+            text: 'Rent Collected by 5th (ZAR)',
             color: getThemeToken('axisTitle') || getThemeToken('chartText')
           },
           suggestedMax: rentCeiling
@@ -1034,6 +1094,7 @@ function refreshRentCollectionChart(chart, rent) {
 
 function createDefaultRateChart(elementId, defaultRate) {
   const ctx = document.getElementById(elementId);
+  const defaultPercentages = calculateDefaultPercentages(defaultRate);
   return new Chart(ctx, {
     type: 'bar',
     data: {
@@ -1051,12 +1112,20 @@ function createDefaultRateChart(elementId, defaultRate) {
           data: defaultRate.unpaid,
           backgroundColor: getAccentColor(4, FALLBACK_COLORS.accent4),
           borderRadius: 8,
-          maxBarThickness: 26
+          maxBarThickness: 26,
+          isDefaultUnpaid: true,
+          defaultPercentages
         }
       ]
     },
     options: {
       responsive: true,
+      plugins: {
+        defaultRateLabel: {
+          offset: 12,
+          fontSize: 11
+        }
+      },
       scales: {
         x: {
           grid: { display: false }
@@ -1071,17 +1140,20 @@ function createDefaultRateChart(elementId, defaultRate) {
 }
 
 function refreshDefaultRateChart(chart, defaultRate) {
+  const defaultPercentages = calculateDefaultPercentages(defaultRate);
   chart.data.labels = defaultRate.months;
   chart.data.datasets[0].data = defaultRate.paid;
   chart.data.datasets[0].backgroundColor = getAccentColor(1, FALLBACK_COLORS.accent1);
   chart.data.datasets[1].data = defaultRate.unpaid;
   chart.data.datasets[1].backgroundColor = getAccentColor(4, FALLBACK_COLORS.accent4);
+  chart.data.datasets[1].defaultPercentages = defaultPercentages;
+  chart.data.datasets[1].isDefaultUnpaid = true;
   chart.update();
 }
 
 function createPaymentPunctualityChart(elementId, punctuality) {
   const ctx = document.getElementById(elementId);
-  document.getElementById('paymentPunctualityCaption').textContent = `This chart shows the share of monthly rent received each day during ${punctuality.label}.`;
+  document.getElementById('paymentPunctualityCaption').textContent = `Shows the share of monthly rent received each day during ${punctuality.label}.`;
   return new Chart(ctx, {
     type: 'bar',
     data: {
