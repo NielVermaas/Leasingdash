@@ -77,6 +77,57 @@ const rentVarianceLabelPlugin = {
   }
 };
 
+const barValueLabelPlugin = {
+  id: 'barValueLabel',
+  afterDatasetsDraw(chart, args, opts) {
+    if (!chart?.data?.datasets?.length) {
+      return;
+    }
+
+    const ctx = chart.ctx;
+    const defaultFontSize = opts?.fontSize || Chart.defaults.font.size || 12;
+    const defaultFontFamily = Chart.defaults.font.family || 'Inter, sans-serif';
+    const defaultColor = opts?.color || getThemeToken('chartText') || '#1f2933';
+
+    chart.data.datasets.forEach((dataset, datasetIndex) => {
+      if (!dataset?.showValueLabels) {
+        return;
+      }
+
+      const meta = chart.getDatasetMeta(datasetIndex);
+      if (!meta || meta.hidden) {
+        return;
+      }
+
+      ctx.save();
+      ctx.font = `${dataset.valueLabelFontSize || defaultFontSize}px ${dataset.valueLabelFontFamily || defaultFontFamily}`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+      ctx.fillStyle = dataset.valueLabelColor || defaultColor;
+
+      const offset = typeof dataset.valueLabelOffset === 'number' ? dataset.valueLabelOffset : opts?.offset ?? 10;
+
+      meta.data.forEach((element, index) => {
+        const rawValue = dataset.data?.[index];
+        if (!Number.isFinite(rawValue)) {
+          return;
+        }
+
+        const formatter = dataset.formatValue;
+        const label = typeof formatter === 'function' ? formatter(rawValue, index, dataset) : rawValue;
+        if (label === undefined || label === null || label === '') {
+          return;
+        }
+
+        const { x, y } = element.tooltipPosition();
+        ctx.fillText(label, x, y - offset);
+      });
+
+      ctx.restore();
+    });
+  }
+};
+
 const defaultRateLabelPlugin = {
   id: 'defaultRateLabel',
   afterDatasetsDraw(chart, args, opts) {
@@ -124,7 +175,7 @@ const defaultRateLabelPlugin = {
 };
 
 if (typeof Chart !== 'undefined') {
-  Chart.register(rentVarianceLabelPlugin, defaultRateLabelPlugin);
+  Chart.register(rentVarianceLabelPlugin, defaultRateLabelPlugin, barValueLabelPlugin);
 }
 
 function buildTypicalPunctualityDistribution() {
@@ -1364,7 +1415,10 @@ function createPaymentPunctualityChart(elementId, punctuality) {
           data: punctuality.values,
           backgroundColor: getAccentColor(1, FALLBACK_COLORS.accent1),
           borderRadius: 8,
-          maxBarThickness: 28
+          maxBarThickness: 28,
+          showValueLabels: true,
+          valueLabelOffset: 12,
+          formatValue: (value) => formatPercentValue(value, Number.isInteger(value) ? 0 : 1)
         }
       ]
     },
@@ -1405,10 +1459,13 @@ function createPaymentPunctualityChart(elementId, punctuality) {
 }
 
 function refreshPaymentPunctualityChart(chart, punctuality) {
-  document.getElementById('paymentPunctualityCaption').textContent = `This chart shows the share of monthly rent received each day during ${punctuality.label}.`;
+  document.getElementById('paymentPunctualityCaption').textContent = `Shows the share of monthly rent received each day during ${punctuality.label}.`;
   chart.data.labels = punctuality.days;
   chart.data.datasets[0].data = punctuality.values;
   chart.data.datasets[0].backgroundColor = getAccentColor(1, FALLBACK_COLORS.accent1);
+  chart.data.datasets[0].showValueLabels = true;
+  chart.data.datasets[0].valueLabelOffset = 12;
+  chart.data.datasets[0].formatValue = (value) => formatPercentValue(value, Number.isInteger(value) ? 0 : 1);
   chart.update();
 }
 
@@ -1429,7 +1486,10 @@ function createVacancyTrendChart(elementId, trend) {
           data: trend.rates,
           backgroundColor: getAccentColor(2, FALLBACK_COLORS.accent2),
           borderRadius: 8,
-          maxBarThickness: 28
+          maxBarThickness: 28,
+          showValueLabels: true,
+          valueLabelOffset: 12,
+          formatValue: (value) => formatPercentValue(value * 100, 1)
         }
       ]
     },
@@ -1467,6 +1527,9 @@ function refreshVacancyTrendChart(chart, trend) {
   chart.data.labels = trend.months;
   chart.data.datasets[0].data = trend.rates;
   chart.data.datasets[0].backgroundColor = getAccentColor(2, FALLBACK_COLORS.accent2);
+  chart.data.datasets[0].showValueLabels = true;
+  chart.data.datasets[0].valueLabelOffset = 12;
+  chart.data.datasets[0].formatValue = (value) => formatPercentValue(value * 100, 1);
   const suggestedMax = getBufferedScaleMax(trend.rates, {
     multiplier: 1.12,
     minBuffer: 0.02,
@@ -1494,7 +1557,10 @@ function createNewInventoryChart(elementId, inventory) {
           data: inventory.buildings,
           backgroundColor: getAccentColor(1, FALLBACK_COLORS.accent1),
           borderRadius: 8,
-          maxBarThickness: 28
+          maxBarThickness: 28,
+          showValueLabels: true,
+          valueLabelOffset: 12,
+          formatValue: (value) => `${value}`
         }
       ]
     },
@@ -1531,6 +1597,9 @@ function refreshNewInventoryChart(chart, inventory) {
   chart.data.labels = inventory.months;
   chart.data.datasets[0].data = inventory.buildings;
   chart.data.datasets[0].backgroundColor = getAccentColor(1, FALLBACK_COLORS.accent1);
+  chart.data.datasets[0].showValueLabels = true;
+  chart.data.datasets[0].valueLabelOffset = 12;
+  chart.data.datasets[0].formatValue = (value) => `${value}`;
   const suggestedMax = getBufferedScaleMax(inventory.buildings, {
     multiplier: 1.15,
     minBuffer: 1
