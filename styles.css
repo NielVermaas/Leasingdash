@@ -498,6 +498,10 @@ body.print-mode canvas {
     margin-top: 0;
   }
 
+  .layout {
+    padding-bottom: 1cm;
+  }
+
   .panel__item,
   .kpi-card {
     border: none;
