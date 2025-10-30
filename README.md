@@ -44,8 +44,8 @@ No build step is required—the dashboard is a static page.
 - Use your browser's print dialog (or save as PDF) when you need a hard copy. The dashboard automatically shifts to a clean light
   palette, tightens card and chart spacing, hides interactive-only controls, and refreshes chart colors for legibility without
   altering the on-screen appearance.
-- Print-specific styling adds built-in page numbers and suppresses browser footers so exported copies stay uncluttered while the
-  layout mirrors what you see on screen.
+- Print-specific styling adds built-in page numbers, suppresses browser footers, and enforces 1.5 cm top and bottom margins so
+  exported copies stay uncluttered while the layout mirrors what you see on screen.
 
 ## Data Highlights
 

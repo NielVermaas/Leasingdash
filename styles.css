@@ -457,13 +457,13 @@ body.print-mode canvas {
   .page {
     max-width: none;
     margin: 0;
-    padding: 1.5cm 1.6cm 1.8cm;
+    padding: 1.5cm 1.6cm 1.5cm;
   }
 
   body::after {
     content: 'Page ' counter(page);
     position: fixed;
-    bottom: 0.7cm;
+    bottom: 1cm;
     right: 1cm;
     font-size: 0.75rem;
     color: #022015;
