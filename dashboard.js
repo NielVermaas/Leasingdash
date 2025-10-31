@@ -1,8 +1,8 @@
 const FALLBACK_COLORS = {
-  accent1: 'rgba(66, 212, 142, 0.85)',
-  accent2: 'rgba(12, 59, 46, 0.85)',
-  accent3: 'rgba(214, 255, 92, 0.85)',
-  accent4: 'rgba(202, 166, 255, 0.85)'
+  accent1: 'rgba(0, 200, 197, 0.85)',
+  accent2: 'rgba(31, 41, 55, 0.85)',
+  accent3: 'rgba(206, 66, 65, 0.85)',
+  accent4: 'rgba(75, 85, 99, 0.85)'
 };
 
 const currencyFormatter = new Intl.NumberFormat('en-ZA', {
@@ -87,7 +87,7 @@ const barValueLabelPlugin = {
     const ctx = chart.ctx;
     const defaultFontSize = opts?.fontSize || Chart.defaults.font.size || 12;
     const defaultFontFamily = Chart.defaults.font.family || 'Inter, sans-serif';
-    const defaultColor = opts?.color || getThemeToken('chartText') || '#1f2933';
+    const defaultColor = opts?.color || getThemeToken('chartText') || '#1f2937';
 
     chart.data.datasets.forEach((dataset, datasetIndex) => {
       if (!dataset?.showValueLabels) {
@@ -159,7 +159,7 @@ const defaultRateLabelPlugin = {
     ctx.font = `${fontSize}px ${fontFamily}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'bottom';
-    ctx.fillStyle = getThemeToken('chartText') || '#1f2933';
+    ctx.fillStyle = getThemeToken('chartText') || '#1f2937';
 
     meta.data.forEach((element, index) => {
       const percentage = percentages[index];
