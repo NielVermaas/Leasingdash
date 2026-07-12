@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wonderland Works — Theme Park Tycoon</title>
+<link rel="stylesheet" href="style.css">
+<script src="start.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="logo">🎡</div><div>Wonderland Works<small>Theme Park Tycoon</small></div></div>
+    <div class="stats">
+      <div class="stat"><div class="label">Cash</div><div class="value" id="cash">$0</div></div>
+      <div class="stat"><div class="label">Visitors</div><div class="value" id="visitors">0</div></div>
+      <div class="stat"><div class="label">Park rating</div><div class="value" id="rating">0%</div></div>
+      <div class="stat"><div class="label">Profit today</div><div class="value" id="profit">$0</div></div>
+    </div>
+    <div class="controls">
+      <button class="iconbtn" id="pauseBtn" title="Pause">⏸</button>
+      <button class="speedbtn active" data-speed="1">1×</button>
+      <button class="speedbtn" data-speed="2">2×</button>
+      <button class="speedbtn" data-speed="4">4×</button>
+      <button class="iconbtn" id="saveBtn" title="Save game">💾</button>
+    </div>
+  </header>
+  <main class="main">
+    <aside class="sidebar">
+      <div class="section-title">Build rides</div>
+      <div class="build-grid" id="rideButtons"></div>
+      <div class="section-title" style="margin-top:16px">Guest facilities</div>
+      <div class="build-grid" id="facilityButtons"></div>
+      <div class="tip"><b>Tycoon tip:</b> Build where there is open grass. Select any building to inspect queues and buy upgrades. Long queues are profitable—but too long makes guests unhappy.</div>
+      <button class="danger-btn" id="bulldozeBtn">🧨 Bulldoze selected</button>
+    </aside>
+    <section class="game-wrap">
+      <canvas id="game"></canvas>
+      <div class="floating">
+        <div class="mission"><b id="missionTitle">Grow your first crowd</b><span id="missionText">Reach 25 visitors and maintain a 70% rating.</span></div>
+        <div class="mode-pill" id="modePill">👆 Select mode</div>
+      </div>
+      <div class="alerts" id="alerts"></div>
+      <div class="toast" id="toast"></div>
+    </section>
+    <aside class="inspector">
+      <div class="section-title">Park health</div>
+      <div class="panel-card health-list" id="healthPanel"></div>
+      <div class="section-title">Inspector</div>
+      <div id="inspector"><div class="panel-card empty">Select a ride, shop, or restroom to see its performance and upgrade options.</div></div>
+    </aside>
+  </main>
+</div>
+<div class="modal" id="welcome">
+  <div class="modal-card">
+    <h1>Build a park people love.</h1>
+    <p>Place attractions, keep guests fed and comfortable, then reinvest profits into faster rides and extra seats. Watch the park-health panel—it tells you exactly what your visitors are missing.</p>
+    <div class="legend">
+      <div>🎢 <b>Rides</b><br><span style="color:#9eb7c8">Create fun and ticket income.</span></div>
+      <div>🍔 <b>Shops</b><br><span style="color:#9eb7c8">Solve hunger and thirst.</span></div>
+      <div>🚻 <b>Restrooms</b><br><span style="color:#9eb7c8">Prevent urgent exits.</span></div>
+      <div>⬆️ <b>Upgrades</b><br><span style="color:#9eb7c8">Add seats and speed up service.</span></div>
+    </div>
+    <button class="start-btn" id="startBtn" type="button" onclick="openThemeParkGates()">Open the gates</button>
+  </div>
+</div>
+<script src="game1.js"></script>
+<script src="game2.js"></script>
+<script src="game3.js"></script>
+<script src="game4.js"></script>
+</body>
+</html>
